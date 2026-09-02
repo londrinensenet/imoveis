@@ -15,9 +15,14 @@ def verify_password(password: str, encoded: str) -> bool:
     try:
         algorithm, version, raw_params, salt64, key64 = encoded.split("$")
         params = dict(item.split("=") for item in raw_params.split(","))
-        if algorithm != "scrypt" or version != "v=1": return False
-        actual = hashlib.scrypt(password.encode(), salt=base64.urlsafe_b64decode(salt64), n=int(params["n"]), r=int(params["r"]), p=int(params["p"]), dklen=len(base64.urlsafe_b64decode(key64)))
-        return hmac.compare_digest(actual, base64.urlsafe_b64decode(key64))
+        expected_params = {key: str(PARAMETERS[key]) for key in ("n", "r", "p")}
+        salt, expected = base64.urlsafe_b64decode(salt64), base64.urlsafe_b64decode(key64)
+        if (algorithm != "scrypt" or version != "v=1" or params != expected_params
+                or len(salt) != 16 or len(expected) != PARAMETERS["dklen"]):
+            return False
+        actual = hashlib.scrypt(password.encode(), salt=salt, n=PARAMETERS["n"],
+                                r=PARAMETERS["r"], p=PARAMETERS["p"], dklen=PARAMETERS["dklen"])
+        return hmac.compare_digest(actual, expected)
     except (ValueError, KeyError, TypeError): return False
 
 def sign_session(subject: str, role: str, secret: str, ttl: int = 3600) -> str:
@@ -37,4 +42,3 @@ def verify_session(token: str, secret: str) -> dict | None:
 
 def authorize(session: dict, role: str, client_id: str | None = None) -> bool:
     return bool(session and (session["role"] == "superadmin" or (session["role"] == role == "cliente" and session["sub"] == client_id)))
-
