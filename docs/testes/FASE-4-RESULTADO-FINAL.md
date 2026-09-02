@@ -85,3 +85,11 @@ Nenhum navegador estava instalado. A tentativa de instalar Playwright 1.55.0 com
 9. Observar os cinco horários reais em `America/Sao_Paulo` antes de considerar a operação recorrente validada.
 
 Nenhum secret real, configuração externa, deploy, publicação, alteração Cloudflare ou merge foi realizado nesta fase.
+
+# Complemento posterior à FASE 4 — módulos imobiliários
+
+Os módulos imobiliários foram criados depois da conclusão original da FASE 4. Sua cobertura complementar inclui testes específicos de normalização dos campos VRSync (localização, mídia, características, contato e tour virtual), das regras de área rural e da fronteira entre dados privados e JSONs públicos.
+
+Quando o ambiente não disponibiliza navegador, não há validação visual completa; as verificações automatizadas e estáticas não substituem essa validação em um navegador real. Esta cobertura complementar não reescreve nem apaga o relatório ou o histórico original acima.
+
+Nenhum deploy, secret ou configuração externa foi criado, alterado ou executado durante este complemento.
