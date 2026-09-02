@@ -11,9 +11,9 @@ O documento [ARQUITETURA.md](ARQUITETURA.md) é a fonte oficial e obrigatória d
 3. **FASE 3 — Auditoria:** verificação completa de arquitetura, lógica, segurança, integrações e separação de dados.
 4. **FASE 4 — Testes:** execução e consolidação dos testes unitários, de integração, segurança e prontidão operacional.
 
-## Estado atual — FASE 2
+## Estado atual — FASE 3
 
-A implementação funcional inclui site estático responsivo, pipeline determinístico de feeds, schemas separados, administração no Cloudflare Worker, autenticação e workflows protegidos. Nenhuma configuração externa ou publicação é realizada automaticamente: consulte [`docs/operacao/GUIA.md`](docs/operacao/GUIA.md).
+A implementação funcional auditada inclui site estático responsivo, pipeline determinístico de feeds, schemas separados, administração no Cloudflare Worker, autenticação e workflows protegidos. A matriz e as correções da auditoria estão em [`docs/auditoria/FASE-3.md`](docs/auditoria/FASE-3.md). Nenhuma configuração externa ou publicação é realizada automaticamente: consulte [`docs/operacao/GUIA.md`](docs/operacao/GUIA.md).
 
 ## Desenvolvimento
 

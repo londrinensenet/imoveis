@@ -1,5 +1,5 @@
 from __future__ import annotations
-import argparse, hashlib
+import argparse
 from datetime import datetime, timezone
 from pathlib import Path
 from src.clientes.service import list_clients
@@ -25,11 +25,14 @@ def sync_client(client_id: str, fetch=download) -> list[dict] | None:
         return load_json(client_path(client_id)/"ultimo-valido.json")
 
 def sync(selected: str | None=None, dry_run=False) -> bool:
-    clients=[c for c in list_clients() if c.get("ativo",True) and (not selected or c["id"]==selected)]
+    clients=[c for c in list_clients() if c.get("ativo",True)]
+    if selected and not any(c["id"] == selected for c in clients):
+        raise ValueError("Cliente ativo não encontrado")
     properties=[]
     for client in clients:
-        result=sync_client(client["id"])
-        if result: properties.extend(result)
+        result = sync_client(client["id"]) if not selected or client["id"] == selected else load_json(client_path(client["id"])/"ultimo-valido.json")
+        if result:
+            properties.extend(result)
     if dry_run: return False
     return generate(properties,clients,ROOT/"public"/"dados")
 
@@ -37,4 +40,3 @@ def main():
     parser=argparse.ArgumentParser(); parser.add_argument("--cliente"); parser.add_argument("--dry-run",action="store_true")
     args=parser.parse_args(); changed=sync(args.cliente,args.dry_run); print("alterado" if changed else "sem-alteracoes")
 if __name__=="__main__": main()
-
