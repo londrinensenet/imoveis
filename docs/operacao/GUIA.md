@@ -10,13 +10,12 @@
 
 ## Configuração posterior no GitHub
 
-Em **Settings → Secrets and variables → Actions**, crie a variável `ENABLE_REAL_SYNC=true` somente após auditoria. Crie `ENABLE_REAL_PUBLISH=true` somente após aprovação da publicação. O secret `SYNC_PUSH_TOKEN` precisa de acesso de escrita apenas a Contents neste repositório. Configure o ambiente `github-pages` com aprovação obrigatória. O agendamento executa todos os clientes nos cinco horários de Brasília; uma execução manual exige a palavra `SINCRONIZAR`.
+Em **Settings → Secrets and variables → Actions**, crie a variável `ENABLE_REAL_SYNC=true` somente após auditoria. Crie `ENABLE_REAL_PUBLISH=true` somente após aprovação da publicação. Não crie token de push: somente o job `publicar` recebe `contents: write` e o checkout fornece o `GITHUB_TOKEN` efêmero e protegido da própria execução; jobs de validação permanecem em `contents: read`. Configure o ambiente `github-pages` com aprovação obrigatória. O agendamento executa todos os clientes nos cinco horários de Brasília; uma execução manual exige a palavra `SINCRONIZAR`.
 
 ## Configuração posterior do Worker
 
-Publique `src/admin/worker.js` no Worker administrativo e configure como secrets `GITHUB_ADMIN_TOKEN`, `SUPERADMIN_USER`, `SUPERADMIN_PASSWORD_HASH` e `SESSION_SECRET`. Configure `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_BRANCH` e `ENABLE_REAL_SYNC` como variáveis. O hash do SUPERADMIN deve seguir `pbkdf2-sha256$310000$<salt-base64url>$<hash-base64url>`. Restrinja o token ao repositório, com Contents e Actions, e associe a API somente a HTTPS.
+Publique `src/admin/worker.js` no Worker administrativo e configure como secrets `GITHUB_ADMIN_TOKEN`, `SUPERADMIN_USER`, `SUPERADMIN_PASSWORD_HASH` e `SESSION_SECRET`. Configure `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_BRANCH`, `ADMIN_ORIGIN` (a origem HTTPS exata do painel, sem barra final) e `ENABLE_REAL_SYNC` como variáveis. O hash do SUPERADMIN deve seguir `pbkdf2-sha256$310000$<salt-base64url>$<hash-base64url>`. Restrinja o token ao repositório, com Contents e Actions, e associe a API somente a HTTPS. A origem exata é obrigatória para CORS e para a proteção CSRF.
 
 ## Navegador e publicação
 
 No GitHub, abra **Settings → Pages**, selecione GitHub Actions e mantenha a proteção do ambiente. Execute “Publicar GitHub Pages” manualmente apenas após definir `ENABLE_REAL_PUBLISH`. Valide início, busca, filtros, detalhe e anunciantes em larguras de 375, 768 e 1440 pixels usando o modo responsivo do navegador. Para Cloudflare Pages no futuro, selecione `public/` como diretório de saída; nenhum código público depende do provedor.
-

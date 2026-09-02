@@ -1,42 +1,68 @@
 name: Sincronizar todos
 on:
   schedule:
-    # GitHub cron usa UTC; 12/15/18/21/02 UTC correspondem a 09/12/15/18/23 em Brasília (sem horário de verão vigente).
-    - cron: '0 12,15,18,21 * * *'
-    - cron: '0 2 * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
     inputs:
       confirmar: {description: 'Digite SINCRONIZAR para operação real', required: false, type: string}
-permissions:
-  contents: read
-concurrency: sincronizacao-publica
+permissions: {}
+concurrency:
+  group: sincronizacao-publica
+  cancel-in-progress: false
 jobs:
-  validar-ou-sincronizar:
+  validar:
+    permissions: {contents: read}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with: {python-version: '3.12'}
       - run: python -m unittest discover -s tests -v
-      - name: Dry-run seguro
-        if: vars.ENABLE_REAL_SYNC != 'true' || (github.event_name == 'workflow_dispatch' && inputs.confirmar != 'SINCRONIZAR')
-        run: python -m src.publicacao.sync --dry-run
-      - name: Sincronizar
-        if: vars.ENABLE_REAL_SYNC == 'true' && (github.event_name == 'schedule' || inputs.confirmar == 'SINCRONIZAR')
-        run: python -m src.publicacao.sync
-      - name: Validar fronteira pública
-        run: python scripts/validate_public.py
-      - name: Commit somente se mudou
-        if: vars.ENABLE_REAL_SYNC == 'true' && (github.event_name == 'schedule' || inputs.confirmar == 'SINCRONIZAR')
+      - run: node --test tests/js/*.test.mjs
+      - run: python scripts/validate_public.py
+      - run: python scripts/validate_workflows.py
+  horario:
+    permissions: {}
+    runs-on: ubuntu-latest
+    outputs: {executar: '${{ steps.fuso.outputs.executar }}'}
+    steps:
+      - id: fuso
+        env: {EVENTO: '${{ github.event_name }}'}
         run: |
-          git diff --quiet -- public private || {
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import datetime, os
+          from zoneinfo import ZoneInfo
+          hora = datetime.datetime.now(ZoneInfo("America/Sao_Paulo")).hour
+          print(f"executar={'true' if os.environ['EVENTO'] == 'workflow_dispatch' or hora in {9, 12, 15, 18, 23} else 'false'}")
+          PY
+  publicar:
+    needs: [validar, horario]
+    if: needs.horario.outputs.executar == 'true' && vars.ENABLE_REAL_SYNC == 'true' && (github.event_name == 'schedule' || inputs.confirmar == 'SINCRONIZAR')
+    permissions: {contents: write}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with: {python-version: '3.12'}
+      - run: python -m src.publicacao.sync
+      - run: python scripts/validate_public.py
+      - name: Criar commit somente se mudou
+        id: commit
+        run: |
+          if git diff --quiet -- public private; then
+            echo 'created=false' >> "$GITHUB_OUTPUT"
+          else
             git config user.name github-actions[bot]
             git config user.email 41898282+github-actions[bot]@users.noreply.github.com
             git add public private/clientes/*/sincronizacao.json private/clientes/*/ultimo-valido.json
             git commit -m 'dados: sincroniza imóveis'
-          }
-      - name: Publicação protegida
-        if: vars.ENABLE_REAL_SYNC == 'true' && vars.ENABLE_REAL_PUBLISH == 'true' && secrets.SYNC_PUSH_TOKEN != '' && (github.event_name == 'schedule' || inputs.confirmar == 'SINCRONIZAR')
-        env: {TOKEN: '${{ secrets.SYNC_PUSH_TOKEN }}'}
-        run: git diff HEAD^ --quiet || git push "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${GITHUB_REF_NAME}
+            echo "created=true" >> "$GITHUB_OUTPUT"
+            echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Push do commit desta execução
+        if: steps.commit.outputs.created == 'true' && vars.ENABLE_REAL_PUBLISH == 'true'
+        env: {COMMIT_SHA: '${{ steps.commit.outputs.sha }}'}
+        run: |
+          test "$(git rev-parse HEAD)" = "$COMMIT_SHA"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
