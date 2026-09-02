@@ -535,19 +535,15 @@ administrador
 
 Guardar somente o HASH da senha.
 
-Nunca:
+É proibido criar uma variável contendo a senha ou registrar um exemplo de senha neste documento.
+
+O nome abaixo é legado do planejamento inicial e não deve ser usado como banco de usuários:
 
 ```text
-SUPERADMIN_PASSWORD=MinhaSenha123
+SUPERADMIN_PASSWORD_HASH
 ```
 
-Preferir:
-
-```text
-SUPERADMIN_PASSWORD_HASH=<hash forte>
-```
-
-A implementação deverá usar derivação segura de senha.
+A persistência do hash com salt e parâmetros dependerá do backend de identidades definido em `ARQUITETURA.md`. Consulte `docs/AUTENTICACAO.md`.
 
 ## SESSION_SECRET
 
