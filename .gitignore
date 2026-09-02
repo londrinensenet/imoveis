@@ -1,7 +1,51 @@
+# Variáveis de ambiente reais (um modelo vazio poderá ser versionado futuramente)
 .env
 .env.*
 !.env.example
-*.pem
+
+# Chaves, certificados e credenciais locais
 *.key
+*.pem
 *.p12
 *.pfx
+*.crt
+*.cer
+*.jks
+
+# Dependências
+node_modules/
+vendor/
+.venv/
+venv/
+
+# Caches
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+
+# Artefatos temporários e de build
+dist/
+build/
+tmp/
+temp/
+*.tmp
+*.swp
+*~
+
+# Cobertura, testes e relatórios locais
+coverage/
+.coverage
+htmlcov/
+test-results/
+reports/
+*.lcov
+
+# IDEs e sistema operacional
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
