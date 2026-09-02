@@ -1,0 +1,1 @@
+export function maisRestritivo(estado,itens,aplicar){const ativos=Object.keys(estado).filter(k=>estado[k]&&!['cidade','ordem'].includes(k));return ativos.map(k=>({id:k,total:aplicar(itens,{...estado,[k]:''}).length})).sort((a,b)=>b.total-a.total||a.id.localeCompare(b.id))[0]?.id}

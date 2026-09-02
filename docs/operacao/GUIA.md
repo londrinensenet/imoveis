@@ -19,3 +19,7 @@ Publique `src/admin/worker.js` no Worker administrativo e configure como secrets
 ## Navegador e publicação
 
 No GitHub, abra **Settings → Pages**, selecione GitHub Actions e mantenha a proteção do ambiente. Execute “Publicar GitHub Pages” manualmente apenas após definir `ENABLE_REAL_PUBLISH`. Valide início, busca, filtros, detalhe e anunciantes em larguras de 375, 768 e 1440 pixels usando o modo responsivo do navegador. Para Cloudflare Pages no futuro, selecione `public/` como diretório de saída; nenhum código público depende do provedor.
+
+## Verificação do motor de busca
+
+Sem publicar, sirva `public/` em HTTP local, abra a página inicial e valide: cascata Cidade/Região/Bairro, URL ao pesquisar, voltar/avançar, resultado zero, teclado na gaveta, grade/lista e layout em 375 px, 768 px e 1280 px. Nunca use dados de `private/` nessa verificação.

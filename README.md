@@ -18,3 +18,7 @@ A implementação funcional foi auditada e submetida aos testes finais locais. O
 ## Desenvolvimento
 
 Requer Python 3.11 ou posterior e não possui dependências de produção. Execute `python -m unittest discover -s tests -v`, `python scripts/validate_public.py` e `python scripts/check_secrets.py`. A sincronização local é iniciada com `python -m src.publicacao.sync`; feeds reais permanecem somente em `private/clientes/<id>/feed.json`.
+
+## Busca imobiliária
+
+O site público possui motor multilógica com filtros dependentes, contagens, estado compartilhável em URL, sugestões determinísticas e listagem responsiva em grade/lista. A procedência, categorias, unidades, persistência e comportamento responsivo estão documentados em [`docs/modulos/FILTROS-E-LISTAGENS.md`](docs/modulos/FILTROS-E-LISTAGENS.md). Os contratos públicos em `schemas/public/` incluem separadamente preços de venda/aluguel e atributos tipados dos cards.

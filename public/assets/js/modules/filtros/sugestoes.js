@@ -1,0 +1,2 @@
+import{maisRestritivo}from"./ranking.js";
+export function sugestoes(estado,itens,aplicar){if(aplicar(itens,estado).length)return[];const r=[{tipo:"preco",texto:"Ampliar a faixa de preço",altera:{precoMin:"",precoMax:""}}],m=maisRestritivo(estado,itens,aplicar);if(m)r.push({tipo:"remover",texto:`Remover ${m}`,altera:{[m]:""}});if(estado.regiao)r.push({tipo:"regiao",texto:"Buscar em todas as regiões",altera:{regiao:"",bairro:""}});return r}

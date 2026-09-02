@@ -1,0 +1,3 @@
+const CHAVES=["finalidade","categoria","precoMin","precoMax","cidade","regiao","bairro","subtipo","areaMin","areaMax","areaUnidade","quartos","suites","banheiros","vagas","andar","features","ordem"];
+export function lerURL(search=location.search){const p=new URLSearchParams(search),r={};for(const k of CHAVES)if(p.has(k))r[k]=p.get(k);return r}
+export function escreverURL(estado,{replace=true}={}){const u=new URL(location.href);for(const k of CHAVES)u.searchParams.delete(k);for(const [k,v]of Object.entries(estado))if(CHAVES.includes(k)&&v!==""&&v!=null&&!(k==="cidade"&&v==="Londrina"))u.searchParams.set(k,Array.isArray(v)?v.join(","):v);history[replace?"replaceState":"pushState"]({filtros:estado},"",u)}

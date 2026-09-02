@@ -182,3 +182,7 @@ Nenhuma fase pode realizar merge automático. Commit ou publicação automatizad
 - `tests/`: fixtures e testes unitários, de integração e de segurança.
 
 Na FASE 1, diretórios deliberadamente vazios são registrados exclusivamente por `.gitkeep`. Esses marcadores deverão ser removidos quando arquivos reais passarem a ocupar os respectivos diretórios.
+
+## 12. Motor público de filtros e listagens
+
+A busca pública continua integralmente estática e opera sobre os shards públicos. Um registro explícito de procedência limita filtros aos campos VRSync permitidos e a uma allowlist de Features, sem derivação de `Description`. O estado multilógica é reproduzível pela URL; a unidade canônica de área é m². Um controlador de filtros atende os quatro modos responsivos e um único renderizador atende grade/lista e cards por categoria. Essas decisões detalham, sem substituir, as regras das seções 3, 5 e 6.
