@@ -7,12 +7,17 @@ from urllib.parse import urlsplit
 from src.core.io import CLIENT_ID
 
 
-KINDS = {"casa", "apartamento", "terreno", "comercial", "rural", "outro"}
+KINDS = {"casa", "apartamento", "terreno", "comercial", "rural", "galpao", "outro"}
 PURPOSES = {"venda", "aluguel"}
 MEDIA_TYPES = {"image", "video"}
 MAX_AREA_M2 = Decimal("1000000000")
 MAX_MONEY = Decimal("1000000000000")
 MAX_COUNT = Decimal("1000")
+OFFICIAL_FEATURES = {
+    "Academia", "Acessibilidade", "Ar-condicionado", "Churrasqueira", "Elevador",
+    "Jardim", "Mobiliado", "Piscina", "Playground", "Pomar", "Portaria",
+    "Quintal", "Salão de festas", "Sauna", "Varanda",
+}
 
 
 def text(value, maximum=200):
@@ -126,7 +131,7 @@ def _features(raw):
     if isinstance(source, dict):
         source = _first(source, "Feature", "feature", default=[])
     values = source if isinstance(source, list) else [source]
-    return list(dict.fromkeys(value for value in (text(item, 100) for item in values[:100]) if value))
+    return list(dict.fromkeys(value for value in (text(item, 100) for item in values[:100]) if value in OFFICIAL_FEATURES))
 
 
 def _contact_info(raw):
@@ -184,10 +189,19 @@ def normalize(raw: dict, client_id: str) -> dict:
         "finalidade": purpose,
         "tipo": kind,
         "preco": number(_first(raw, "preco", "ListPrice", default=0), 0, MAX_MONEY),
+        "preco_venda": number(_first(raw, "ListPrice", "preco_venda", default=_first(raw, "preco", default=0)), 0, MAX_MONEY),
+        "preco_aluguel": number(_first(raw, "RentalPrice", "preco_aluguel", default=_first(raw, "preco", default=0)), 0, MAX_MONEY),
         "area": area,
+        "area_util": number(_first(details, "LivingArea", "living_area", default=_first(raw, "LivingArea", default=0)), 0, MAX_AREA_M2),
+        "area_terreno": number(raw_area, 0, MAX_AREA_M2) if kind != "rural" else area,
         "quartos": int(number(_first(raw, "quartos", "Bedrooms", default=0), 0, MAX_COUNT)),
+        "suites": int(number(_first(raw, "suites", "Suites", default=0), 0, MAX_COUNT)),
         "banheiros": int(number(_first(raw, "banheiros", "Bathrooms", default=0), 0, MAX_COUNT)),
         "vagas": int(number(_first(raw, "vagas", "Garage", default=0), 0, MAX_COUNT)),
+        "andar": int(number(_first(raw, "UnitFloor", default=_first(details, "UnitFloor", default=0)), 0, MAX_COUNT)),
+        "andares": int(number(_first(raw, "Floors", default=_first(details, "Floors", default=0)), 0, MAX_COUNT)),
+        "ano_construcao": int(number(_first(raw, "YearBuilt", default=_first(details, "YearBuilt", default=0)), 0, 3000)),
+        "subtipo": text(_first(details, "PropertyType", "property_type", default=""), 80),
         "fotos": photos,
         "location": location,
         "media": media,
