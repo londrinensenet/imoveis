@@ -1,0 +1,9 @@
+[project]
+name = "portal-londrinense-imoveis"
+version = "2.0.0"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+

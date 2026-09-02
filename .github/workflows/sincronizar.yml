@@ -1,0 +1,42 @@
+name: Sincronizar todos
+on:
+  schedule:
+    # GitHub cron usa UTC; 12/15/18/21/02 UTC correspondem a 09/12/15/18/23 em Brasília (sem horário de verão vigente).
+    - cron: '0 12,15,18,21 * * *'
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      confirmar: {description: 'Digite SINCRONIZAR para operação real', required: false, type: string}
+permissions:
+  contents: read
+concurrency: sincronizacao-publica
+jobs:
+  validar-ou-sincronizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m unittest discover -s tests -v
+      - name: Dry-run seguro
+        if: vars.ENABLE_REAL_SYNC != 'true' || (github.event_name == 'workflow_dispatch' && inputs.confirmar != 'SINCRONIZAR')
+        run: python -m src.publicacao.sync --dry-run
+      - name: Sincronizar
+        if: vars.ENABLE_REAL_SYNC == 'true' && (github.event_name == 'schedule' || inputs.confirmar == 'SINCRONIZAR')
+        run: python -m src.publicacao.sync
+      - name: Validar fronteira pública
+        run: python scripts/validate_public.py
+      - name: Commit somente se mudou
+        if: vars.ENABLE_REAL_SYNC == 'true' && (github.event_name == 'schedule' || inputs.confirmar == 'SINCRONIZAR')
+        run: |
+          git diff --quiet -- public private || {
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git add public private/clientes/*/sincronizacao.json private/clientes/*/ultimo-valido.json
+            git commit -m 'dados: sincroniza imóveis'
+          }
+      - name: Publicação protegida
+        if: vars.ENABLE_REAL_SYNC == 'true' && vars.ENABLE_REAL_PUBLISH == 'true' && secrets.SYNC_PUSH_TOKEN != '' && (github.event_name == 'schedule' || inputs.confirmar == 'SINCRONIZAR')
+        env: {TOKEN: '${{ secrets.SYNC_PUSH_TOKEN }}'}
+        run: git diff HEAD^ --quiet || git push "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:${GITHUB_REF_NAME}

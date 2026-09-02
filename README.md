@@ -11,8 +11,10 @@ O documento [ARQUITETURA.md](ARQUITETURA.md) é a fonte oficial e obrigatória d
 3. **FASE 3 — Auditoria:** verificação completa de arquitetura, lógica, segurança, integrações e separação de dados.
 4. **FASE 4 — Testes:** execução e consolidação dos testes unitários, de integração, segurança e prontidão operacional.
 
-## Estado atual
+## Estado atual — FASE 2
 
-A **FASE 1 estará concluída após o merge manual desta Pull Request**. Ainda não existe código funcional, página provisória, backend ou workflow ativo neste repositório.
+A implementação funcional inclui site estático responsivo, pipeline determinístico de feeds, schemas separados, administração no Cloudflare Worker, autenticação e workflows protegidos. Nenhuma configuração externa ou publicação é realizada automaticamente: consulte [`docs/operacao/GUIA.md`](docs/operacao/GUIA.md).
 
-Nenhuma configuração externa ou secret deve ser criado nesta fase. Não execute deploy e não configure GitHub Pages, Cloudflare ou credenciais antes das fases previstas na arquitetura.
+## Desenvolvimento
+
+Requer Python 3.11 ou posterior e não possui dependências de produção. Execute `python -m unittest discover -s tests -v`, `python scripts/validate_public.py` e `python scripts/check_secrets.py`. A sincronização local é iniciada com `python -m src.publicacao.sync`; feeds reais permanecem somente em `private/clientes/<id>/feed.json`.
