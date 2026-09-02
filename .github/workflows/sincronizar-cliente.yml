@@ -38,7 +38,7 @@ jobs:
       - name: Criar commit somente se mudou
         id: commit
         run: |
-          if git diff --quiet -- public private; then
+          if test -z "$(git status --porcelain -- public private)"; then
             echo 'created=false' >> "$GITHUB_OUTPUT"
           else
             git config user.name github-actions[bot]

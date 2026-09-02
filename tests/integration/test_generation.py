@@ -49,3 +49,21 @@ class GenerationTests(unittest.TestCase):
    self.assertTrue(all((out/file).is_file() for group in manifest.values() for file in group["partes"]))
    self.assertEqual({prop["id"]},{p.stem for p in (out/"imoveis").glob("*.json")})
 if __name__=="__main__":unittest.main()
+
+class AtomicSwapRegressionTests(unittest.TestCase):
+ def test_falha_na_troca_restaura_arvore_e_nao_publica_staging(self):
+  import os
+  prop=normalize(parse((FIX/"feed-valido.xml").read_bytes())[0],"cliente-a")
+  with tempfile.TemporaryDirectory() as directory:
+   out=Path(directory)/"dados";generate([prop],[{"id":"cliente-a","nome":"A"}],out)
+   before={str(p.relative_to(out)):p.read_bytes() for p in out.rglob("*") if p.is_file()}
+   real_replace=os.replace; calls=0
+   def replace(source,target):
+    nonlocal calls
+    calls+=1
+    if calls==2: raise OSError("falha durante troca")
+    return real_replace(source,target)
+   with patch("src.publicacao.generator.os.replace",side_effect=replace):
+    with self.assertRaises(OSError):generate([{**prop,"titulo":"novo"}],[{"id":"cliente-a","nome":"A"}],out)
+   self.assertEqual(before,{str(p.relative_to(out)):p.read_bytes() for p in out.rglob("*") if p.is_file()})
+   self.assertEqual([],list(Path(directory).glob(".dados-*")))

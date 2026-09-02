@@ -69,7 +69,7 @@ for path in sorted(WORKFLOWS.glob("*.yml")):
         if job == "publicar" and "git push" in body:
             if "permissions: {contents: write}" not in body:
                 fail(path, "job publicar deve declarar contents: write")
-            required = ("id: commit", "created=true", "sha=$(git rev-parse HEAD)",
+            required = ("id: commit", 'git status --porcelain -- public private', "created=true", "sha=$(git rev-parse HEAD)",
                         "steps.commit.outputs.created == 'true'", "test \"$(git rev-parse HEAD)\" = \"$COMMIT_SHA\"",
                         "git push origin")
             for fragment in required:
