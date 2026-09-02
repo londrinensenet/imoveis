@@ -18,3 +18,9 @@ A implementação funcional auditada inclui site estático responsivo, pipeline 
 ## Desenvolvimento
 
 Requer Python 3.11 ou posterior e não possui dependências de produção. Execute `python -m unittest discover -s tests -v`, `python scripts/validate_public.py` e `python scripts/check_secrets.py`. A sincronização local é iniciada com `python -m src.publicacao.sync`; feeds reais permanecem somente em `private/clientes/<id>/feed.json`.
+
+## Módulos da página do imóvel
+
+O complemento imobiliário adiciona módulos ES condicionais para galeria, comodidades, vídeo, tour 360°, mapa, simulação financeira, contato, similares, vistos recentemente, favoritos, comparação e compartilhamento. O registro está em `public/assets/js/modules/index.js`; detalhes de dados, ativação e segurança estão em [`docs/modulos/MODULOS-IMOBILIARIOS.md`](docs/modulos/MODULOS-IMOBILIARIOS.md).
+
+Além da suíte Python, execute `node --test tests/js/*.test.mjs tests/js/modules/*.test.mjs` e valide a sintaxe com `node --check public/assets/js/modules/*.js`. A página não consulta serviços quando um módulo não tem dados válidos.

@@ -1,1 +1,120 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Feed XML normalizado na entrada","type":"object","required":["codigo","cidade","finalidade","preco"],"properties":{"codigo":{"type":"string","maxLength":80},"titulo":{"type":"string","maxLength":160},"descricao":{"type":"string","maxLength":5000},"cidade":{"type":"string","maxLength":80},"bairro":{"type":"string","maxLength":100},"uf":{"type":"string","pattern":"^[A-Z]{2}$"},"finalidade":{"enum":["venda","aluguel"]},"tipo":{"enum":["casa","apartamento","terreno","comercial","rural","outro"]},"preco":{"type":"number","minimum":0},"fotos":{"type":"array","maxItems":30,"items":{"type":"string","format":"uri"}}},"additionalProperties":true}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Feed XML normalizado na entrada",
+  "type": "object",
+  "required": [
+    "codigo",
+    "cidade",
+    "finalidade",
+    "preco"
+  ],
+  "properties": {
+    "codigo": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "titulo": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "descricao": {
+      "type": "string",
+      "maxLength": 5000
+    },
+    "cidade": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "bairro": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "uf": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "finalidade": {
+      "enum": [
+        "venda",
+        "aluguel"
+      ]
+    },
+    "tipo": {
+      "enum": [
+        "casa",
+        "apartamento",
+        "terreno",
+        "comercial",
+        "rural",
+        "outro"
+      ]
+    },
+    "preco": {
+      "type": "number",
+      "minimum": 0
+    },
+    "fotos": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "latitude": {
+      "type": [
+        "number",
+        "string"
+      ]
+    },
+    "longitude": {
+      "type": [
+        "number",
+        "string"
+      ]
+    },
+    "media": {
+      "type": "array",
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "medium": {
+            "enum": [
+              "image",
+              "video"
+            ]
+          },
+          "primary": {
+            "type": "boolean"
+          },
+          "caption": {
+            "type": "string",
+            "maxLength": 240
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "virtual_tour": {
+      "type": "string",
+      "format": "uri"
+    },
+    "amenities": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "maxLength": 120
+      }
+    },
+    "contact": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

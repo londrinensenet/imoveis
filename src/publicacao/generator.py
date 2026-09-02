@@ -11,9 +11,9 @@ from pathlib import Path
 
 from src.core.io import canonical_bytes
 
-CARD_FIELDS = ("id", "cliente_id", "titulo", "cidade", "bairro", "uf", "finalidade", "tipo", "preco", "area", "quartos", "banheiros", "vagas")
-FULL_FIELDS = CARD_FIELDS + ("codigo", "descricao", "fotos")
-PUBLIC_CLIENT_FIELDS = ("id", "nome", "tipo", "creci", "cidade", "uf", "descricao", "logo")
+CARD_FIELDS = ("id", "cliente_id", "titulo", "cidade", "bairro", "uf", "finalidade", "tipo", "preco", "area", "quartos", "suites", "banheiros", "vagas", "condominio", "iptu", "amenities")
+FULL_FIELDS = CARD_FIELDS + ("codigo", "descricao", "fotos", "images", "coordinates", "videoYoutube", "virtualTour", "publicContact")
+PUBLIC_CLIENT_FIELDS = ("id", "nome", "tipo", "creci", "cidade", "uf", "descricao", "logo", "email", "website", "telephone", "whatsapp")
 TARGET = 1_000_000
 
 
@@ -60,6 +60,13 @@ def generate(properties: list[dict], clients: list[dict], output: Path) -> bool:
     existir, sem expor uma publicação parcialmente atualizada.
     """
     properties = sorted(properties, key=lambda item: item["id"])
+    clients_by_id = {client["id"]: client for client in clients}
+    for prop in properties:
+        client = clients_by_id.get(prop.get("cliente_id"), {})
+        controlled = {key: client.get(key) for key in ("email", "website", "telephone", "whatsapp") if client.get(key)}
+        controlled["name"] = client.get("nome") or prop.get("publicContact", {}).get("name", "")
+        controlled["logo"] = client.get("logo") or prop.get("publicContact", {}).get("logo", "")
+        prop["publicContact"] = {**prop.get("publicContact", {}), **controlled}
     ids = [item["id"] for item in properties]
     if any(not re.fullmatch(r"[a-z0-9][a-z0-9-]{2,159}", item_id) for item_id in ids):
         raise ValueError("ID público inválido")

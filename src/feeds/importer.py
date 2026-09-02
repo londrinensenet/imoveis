@@ -37,7 +37,59 @@ def parse(data: bytes) -> list[dict]:
     if b"<!DOCTYPE" in data.upper() or b"<!ENTITY" in data.upper(): raise ValueError("DTD não permitido")
     try: root = ET.fromstring(data)
     except ET.ParseError as exc: raise ValueError("XML inválido") from exc
-    items = root.findall(".//imovel")
+    items = [node for node in root.iter() if node.tag.rsplit("}", 1)[-1].lower() in {"imovel", "listing"}]
     if not items: raise ValueError("Feed sem imóveis")
     if len(items) > MAX_ITEMS: raise ValueError("Feed excede o limite de imóveis")
-    return [{child.tag: (child.text or "").strip() for child in node if len(child) == 0} | {"fotos": [(f.text or "").strip() for f in node.findall("./fotos/foto")]} for node in items]
+    return [_parse_item(node) for node in items]
+
+
+def _name(node) -> str:
+    return node.tag.rsplit("}", 1)[-1]
+
+
+def _first(node, *paths: str) -> str:
+    wanted = [tuple(part.lower() for part in path.split("/")) for path in paths]
+    for candidate in node.iter():
+        ancestry = []
+        current = candidate
+        # ElementTree não mantém pais; os caminhos de VRSync usados aqui têm nomes
+        # terminais inequívocos e são tratados explicitamente em _parse_item.
+        name = _name(current).lower()
+        if any(name == path[-1] for path in wanted) and (current.text or "").strip():
+            return (current.text or "").strip()
+    return ""
+
+
+def _parse_item(node) -> dict:
+    raw = {_name(child): (child.text or "").strip() for child in node if len(child) == 0}
+    aliases = {
+        "codigo": ("ListingID", "codigo"), "titulo": ("Title", "titulo"),
+        "descricao": ("Description", "descricao"), "cidade": ("City", "cidade"),
+        "bairro": ("Neighborhood", "bairro"), "uf": ("State", "uf"),
+        "finalidade": ("TransactionType", "finalidade"), "tipo": ("PropertyType", "tipo"),
+        "preco": ("ListPrice", "preco"), "area": ("LivingArea", "area"),
+        "quartos": ("Bedrooms", "quartos"), "suites": ("Suites", "suites"),
+        "banheiros": ("Bathrooms", "banheiros"), "vagas": ("Garage", "vagas"),
+        "condominio": ("PropertyAdministrationFee", "condominio"), "iptu": ("YearlyTax", "iptu"),
+        "latitude": ("Latitude",), "longitude": ("Longitude",),
+        "virtual_tour": ("VirtualTourLink",),
+    }
+    lowered = {_name(candidate).lower(): (candidate.text or "").strip() for candidate in node.iter() if len(candidate) == 0}
+    for target, names in aliases.items():
+        raw[target] = next((lowered[name.lower()] for name in names if lowered.get(name.lower())), "")
+    media = []
+    for candidate in node.iter():
+        if _name(candidate).lower() not in {"item", "foto"}: continue
+        url = (candidate.text or candidate.get("url") or "").strip()
+        medium = (candidate.get("medium") or ("image" if _name(candidate).lower() == "foto" else "")).lower()
+        media.append({"url": url, "medium": medium, "primary": (candidate.get("primary") or "").lower() in {"true", "1", "yes"}, "caption": candidate.get("caption") or ""})
+    raw["media"] = media
+    raw["fotos"] = [item["url"] for item in media if item["medium"] == "image"]
+    raw["amenities"] = [(candidate.text or "").strip() for candidate in node.iter() if _name(candidate).lower() == "feature"]
+    contact = {}
+    for parent in node.iter():
+        if _name(parent).lower() == "contactinfo":
+            contact = {_name(child).lower(): (child.text or "").strip() for child in parent if len(child) == 0}
+            break
+    raw["contact"] = contact
+    return raw

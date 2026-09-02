@@ -182,3 +182,9 @@ Nenhuma fase pode realizar merge automático. Commit ou publicação automatizad
 - `tests/`: fixtures e testes unitários, de integração e de segurança.
 
 Na FASE 1, diretórios deliberadamente vazios são registrados exclusivamente por `.gitkeep`. Esses marcadores deverão ser removidos quando arquivos reais passarem a ocupar os respectivos diretórios.
+
+## 12. Módulos imobiliários públicos
+
+A página individual inicializa módulos ES independentes por meio de um registro único. Galeria, dados e características, comodidades, mídia, mapa, calculadora, anunciante, contato, recomendações, histórico local e ações seguem ordem semântica fixa. Cada módulo recebe apenas o imóvel público, o perfil público controlado do anunciante, os cards do índice já particionado e seu elemento de montagem; ausência ou invalidade dos dados oculta e esvazia exclusivamente o respectivo elemento.
+
+O pipeline reconhece os elementos VRSync necessários antes da fronteira pública. O normalizador valida números e URLs, e o gerador continua aplicando allowlists distintas para cards, detalhes e clientes. Contato do feed pode fornecer dados padronizados, mas WhatsApp é aceito somente no perfil controlado do cliente. Mapa usa OpenStreetMap por padrão, sem geocodificação; outros provedores dependem de configuração futura sem chave versionada. Calculadora, favoritos, comparação e histórico são exclusivamente locais, sem Worker, D1 ou KV.

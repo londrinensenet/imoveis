@@ -1,1 +1,178 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Imóvel público completo","type":"object","required":["id","cliente_id","titulo","cidade","finalidade","tipo","preco","fotos"],"properties":{"id":{"type":"string"},"cliente_id":{"type":"string"},"codigo":{"type":"string"},"titulo":{"type":"string"},"descricao":{"type":"string"},"cidade":{"type":"string"},"bairro":{"type":"string"},"uf":{"type":"string"},"finalidade":{"enum":["venda","aluguel"]},"tipo":{"type":"string"},"preco":{"type":"number"},"area":{"type":"number"},"quartos":{"type":"integer"},"banheiros":{"type":"integer"},"vagas":{"type":"integer"},"fotos":{"type":"array","items":{"type":"string","format":"uri"}}},"additionalProperties":false}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Imóvel público completo",
+  "type": "object",
+  "required": [
+    "id",
+    "cliente_id",
+    "titulo",
+    "cidade",
+    "finalidade",
+    "tipo",
+    "preco",
+    "fotos"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "cliente_id": {
+      "type": "string"
+    },
+    "codigo": {
+      "type": "string"
+    },
+    "titulo": {
+      "type": "string"
+    },
+    "descricao": {
+      "type": "string"
+    },
+    "cidade": {
+      "type": "string"
+    },
+    "bairro": {
+      "type": "string"
+    },
+    "uf": {
+      "type": "string"
+    },
+    "finalidade": {
+      "enum": [
+        "venda",
+        "aluguel"
+      ]
+    },
+    "tipo": {
+      "type": "string"
+    },
+    "preco": {
+      "type": "number"
+    },
+    "area": {
+      "type": "number"
+    },
+    "quartos": {
+      "type": "integer"
+    },
+    "banheiros": {
+      "type": "integer"
+    },
+    "vagas": {
+      "type": "integer"
+    },
+    "fotos": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "suites": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "condominio": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "iptu": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "coordinates": {
+      "type": "object",
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "properties": {
+        "latitude": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        }
+      },
+      "additionalProperties": false
+    },
+    "images": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "primary",
+          "caption"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "primary": {
+            "type": "boolean"
+          },
+          "caption": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "videoYoutube": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "virtualTour": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "amenities": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "string"
+      }
+    },
+    "publicContact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        },
+        "logo": {
+          "type": "string"
+        },
+        "telephone": {
+          "type": "string"
+        },
+        "whatsapp": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

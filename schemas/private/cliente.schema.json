@@ -1,1 +1,82 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Cliente privado","type":"object","required":["id","nome","tipo","ativo"],"properties":{"id":{"type":"string","pattern":"^[a-z0-9][a-z0-9-]{2,39}$"},"nome":{"type":"string","maxLength":160},"tipo":{"enum":["imobiliaria","corretor"]},"documento":{"type":"string","maxLength":30},"responsavel":{"type":"string","maxLength":160},"observacoes":{"type":"string","maxLength":2000},"ativo":{"type":"boolean"}},"additionalProperties":false}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cliente privado",
+  "type": "object",
+  "required": [
+    "id",
+    "nome",
+    "tipo",
+    "ativo"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{2,39}$"
+    },
+    "nome": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "tipo": {
+      "enum": [
+        "imobiliaria",
+        "corretor"
+      ]
+    },
+    "documento": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "responsavel": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "observacoes": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "ativo": {
+      "type": "boolean"
+    },
+    "creci": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "cidade": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "uf": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "descricao": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "logo": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254
+    },
+    "website": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "telephone": {
+      "type": "string",
+      "maxLength": 40
+    },
+    "whatsapp": {
+      "type": "string",
+      "maxLength": 40
+    }
+  },
+  "additionalProperties": false
+}

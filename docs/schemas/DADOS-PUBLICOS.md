@@ -1,0 +1,3 @@
+# Campos públicos dos módulos
+
+O detalhe permite exclusivamente os campos do `schemas/public/imovel.schema.json`. Os novos grupos são `coordinates`, `images`, `videoYoutube`, `virtualTour`, `amenities` e `publicContact`, além de suítes, condomínio e IPTU para cálculo, comparação e similares. Cards recebem apenas o subconjunto de comparação/recomendação. O perfil público controlado pode conter e-mail, site, telefone e WhatsApp; campos fiscais, administrativos, autenticação e origem do feed continuam privados. Todas as estruturas públicas usam `additionalProperties: false` onde representam objetos emitidos.

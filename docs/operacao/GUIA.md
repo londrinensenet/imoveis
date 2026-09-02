@@ -19,3 +19,7 @@ Publique `src/admin/worker.js` no Worker administrativo e configure como secrets
 ## Navegador e publicação
 
 No GitHub, abra **Settings → Pages**, selecione GitHub Actions e mantenha a proteção do ambiente. Execute “Publicar GitHub Pages” manualmente apenas após definir `ENABLE_REAL_PUBLISH`. Valide início, busca, filtros, detalhe e anunciantes em larguras de 375, 768 e 1440 pixels usando o modo responsivo do navegador. Para Cloudflare Pages no futuro, selecione `public/` como diretório de saída; nenhum código público depende do provedor.
+
+## Verificação dos módulos imobiliários
+
+Após uma sincronização validada, abra um detalhe com dados completos e confirme a ordem dos módulos. Se um campo opcional estiver ausente, a seção correspondente deve permanecer oculta. Favoritos, comparação e vistos recentemente usam somente `localStorage` do visitante e podem ser limpos pelos dados do site no navegador. Contato abre diretamente o aplicativo escolhido e não envia formulário ao portal. A calculadora é apenas estimativa. O mapa usa OSM sob demanda; vídeo e tour somente originam conexão após validação e quando presentes.
