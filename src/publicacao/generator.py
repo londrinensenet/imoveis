@@ -12,7 +12,7 @@ from pathlib import Path
 from src.core.io import canonical_bytes
 
 CARD_FIELDS = ("id", "cliente_id", "titulo", "cidade", "bairro", "uf", "finalidade", "tipo", "preco", "area", "quartos", "banheiros", "vagas")
-FULL_FIELDS = CARD_FIELDS + ("codigo", "descricao", "fotos")
+FULL_FIELDS = CARD_FIELDS + ("codigo", "descricao", "fotos", "location", "media", "features", "contact_info", "virtual_tour_link", "area_apresentacao")
 PUBLIC_CLIENT_FIELDS = ("id", "nome", "tipo", "creci", "cidade", "uf", "descricao", "logo")
 TARGET = 1_000_000
 
