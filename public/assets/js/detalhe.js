@@ -1,4 +1,4 @@
-import{fetchJSON,loadCards,el,fallback,money,precoDo,urlPublica}from"./common.js";import{criarCard}from"./modules/listagem.js";
+import{fetchJSON,loadCards,el,fallback,money,precoDo,urlPublica}from"./common.js?v=20260903-1";import{criarCard}from"./modules/listagem.js?v=20260903-1";
 // Dados descritivos são inseridos por textContent; substitui o antigo escape(x.descricao).
 const root=document.querySelector("#detalhe"),params=new URLSearchParams(location.search),id=params.get("id"),retorno=params.get("retorno"),voltar=document.querySelector("#voltar-resultados");
 if(retorno){try{const u=new URL(retorno,location.href);if(u.origin===location.origin)voltar.href=u.href}catch{/* mantém fallback seguro */}}
