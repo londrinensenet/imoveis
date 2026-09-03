@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {webcrypto} from "node:crypto";
+import {readFile} from "node:fs/promises";
 import test from "node:test";
 
 globalThis.crypto ??= webcrypto;
@@ -90,6 +91,91 @@ test("origem, CORS, CSRF, HTTPS e cache privado são aplicados", async () => {
   assert.equal(absent.status, 403);
   const insecure = await worker.fetch(new Request(`http://${new URL(env.ADMIN_ORIGIN).hostname}/api/login`, {method: "POST", headers: {origin: env.ADMIN_ORIGIN, "content-type": "application/json"}, body: "{}"}), env);
   assert.equal(insecure.status, 400);
+});
+
+test("GET de sessão reproduz a semântica de Origin do navegador", async () => {
+  const env = await environment("browser-origin");
+  const withoutCookie = await worker.fetch(new Request(`${env.ADMIN_ORIGIN}/api/sessao`), env);
+  assert.equal(withoutCookie.status, 401);
+
+  const token = await testables.session("ADMIN", "superadmin", env[secretKey]);
+  const withCookie = await worker.fetch(new Request(`${env.ADMIN_ORIGIN}/api/sessao`, {
+    headers: {cookie: `session=${token}`},
+  }), env);
+  assert.equal(withCookie.status, 200);
+  assert.deepEqual(await withCookie.json(), {
+    usuario: "ADMIN",
+    nome: "ADMIN",
+    papel: "superadmin",
+    permissoes: ["administracao_total"],
+  });
+
+  const externalOrigin = await worker.fetch(new Request(`${env.ADMIN_ORIGIN}/api/sessao`, {
+    headers: {origin: "https://externo.example", cookie: `session=${token}`},
+  }), env);
+  assert.equal(externalOrigin.status, 403);
+});
+
+test("métodos mutáveis nunca aceitam Origin ausente ou diferente", async () => {
+  const env = await environment("mutable-origin");
+  for (const method of ["POST", "PUT", "PATCH", "DELETE"]) {
+    for (const headers of [
+      {"content-type": "application/json"},
+      {origin: "https://externo.example", "content-type": "application/json"},
+    ]) {
+      const response = await worker.fetch(new Request(`${env.ADMIN_ORIGIN}/api/login`, {method, headers, body: "{}"}), env);
+      assert.equal(response.status, 403, `${method} com ${headers.origin || "Origin ausente"}`);
+    }
+  }
+});
+
+test("login completo emite cookie e a sessão seguinte abre o painel como SUPERADMIN", async () => {
+  const env = await environment("complete-login");
+  const login = await worker.fetch(request(env, "/api/login", {usuario: "ADMIN", senha: "TESTE"}), env);
+  assert.equal(login.status, 200);
+  const token = cookieValue(login);
+  assert.ok(token);
+
+  const session = await worker.fetch(new Request(`${env.ADMIN_ORIGIN}/api/sessao`, {
+    headers: {cookie: `session=${token}`},
+  }), env);
+  assert.equal(session.status, 200);
+  const identity = await session.json();
+  assert.equal(identity.papel, "superadmin");
+
+  const panelSource = await readFile(new URL("../../public/painel/painel.js", import.meta.url), "utf8");
+  assert.match(panelSource, /login\.hidden=true;app\.hidden=false/);
+  assert.match(panelSource, /session\.papel\.toUpperCase\(\)/);
+  assert.doesNotMatch(panelSource, /[?&](?:usuario|senha)=/i);
+});
+
+test("submit captura o formulário antes do await e usa essa referência no reset", async () => {
+  const source = await readFile(new URL("../../public/painel/painel.js", import.meta.url), "utf8");
+  const listener = source.slice(source.indexOf('addEventListener("submit"'), source.indexOf('document.querySelector("#sair")'));
+  assert.ok(listener, "listener de login encontrado");
+  assert.ok(listener.indexOf("const form=event.currentTarget") < listener.indexOf("await api"));
+  assert.match(listener, /new FormData\(form\)/);
+  assert.match(listener, /form\.reset\(\);await boot\(\)/);
+  assert.doesNotMatch(listener.slice(listener.indexOf("await api")), /event\.currentTarget/);
+  assert.match(listener, /catch\(error\)\{status\.textContent=error\.message\}/);
+
+  let reset = false;
+  const form = {reset() { reset = true; }};
+  const event = {currentTarget: form};
+  const captured = event.currentTarget;
+  await Promise.resolve().then(() => { event.currentTarget = null; });
+  captured.reset();
+  assert.equal(reset, true);
+});
+
+test("painel invalida a versão anterior e aplica cache administrativo restrito", async () => {
+  const html = await readFile(new URL("../../public/painel/index.html", import.meta.url), "utf8");
+  const headers = await readFile(new URL("../../public/_headers", import.meta.url), "utf8");
+  assert.match(html, /painel\.css\?v=20260903-login-origin/);
+  assert.match(html, /painel\.js\?v=20260903-login-origin/);
+  assert.match(headers, /\/painel\/index\.html\n  Cache-Control: no-store/);
+  assert.match(headers, /\/painel\/\*\.js\n  Cache-Control: public, max-age=0, must-revalidate/);
+  assert.match(headers, /\/painel\/modulos\/\*\n  Cache-Control: public, max-age=0, must-revalidate/);
 });
 
 test("payload é limitado com e sem Content-Length e JSON inválido é rejeitado", async () => {
