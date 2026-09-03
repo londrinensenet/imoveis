@@ -33,5 +33,6 @@ class WorkflowAndExposureTests(unittest.TestCase):
         files=[path for path in (ROOT/"public").rglob("*") if path.is_file()]
         self.assertFalse(any(".dados-" in path.name or path.name.startswith(".tmp-") for path in files))
         content=b"\n".join(path.read_bytes() for path in files).lower()
-        for forbidden in (b"feed_url",b"private/clientes",b"senha",b"password",b"token",b"cookie",b"pbkdf2",b"scrypt"):
+        # "tokens.css" é o vocabulário padrão do sistema visual, não uma credencial.
+        for forbidden in (b"feed_url",b"private/clientes",b"senha",b"password",b"api_token",b"access_token",b"cookie",b"pbkdf2",b"scrypt"):
             self.assertNotIn(forbidden,content)

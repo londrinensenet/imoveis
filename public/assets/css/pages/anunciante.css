@@ -1,0 +1,1 @@
+.perfil { display:grid;grid-template-columns:10rem 1fr;gap:var(--esp-5);align-items:center }.perfil img { width:10rem;aspect-ratio:1;object-fit:contain;border:var(--borda);border-radius:var(--raio) } @media(max-width:600px){.perfil{grid-template-columns:1fr}.perfil img{width:7rem}}

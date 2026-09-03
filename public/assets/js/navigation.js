@@ -1,0 +1,5 @@
+const toggle=document.querySelector(".menu-toggle"),nav=document.querySelector(".nav-principal");
+function fechar(){if(!toggle||!nav)return;nav.classList.remove("aberto");toggle.setAttribute("aria-expanded","false");document.body.classList.remove("menu-aberto")}
+toggle?.addEventListener("click",()=>{const aberto=!nav.classList.contains("aberto");nav.classList.toggle("aberto",aberto);toggle.setAttribute("aria-expanded",String(aberto));document.body.classList.toggle("menu-aberto",aberto);if(aberto)nav.querySelector("a")?.focus()});
+document.addEventListener("keydown",event=>{if(event.key==="Escape"&&nav?.classList.contains("aberto")){fechar();toggle.focus()}});nav?.addEventListener("click",event=>{if(event.target.closest("a"))fechar()});
+const path=location.pathname.split("/").pop()||"index.html";document.querySelectorAll(".nav-principal a").forEach(link=>{const href=link.getAttribute("href")?.split("?")[0];if(href===path||(path==="index.html"&&link.dataset.home))link.setAttribute("aria-current","page")});

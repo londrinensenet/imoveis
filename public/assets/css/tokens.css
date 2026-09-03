@@ -1,0 +1,17 @@
+:root {
+  color-scheme: light;
+  --cor-marca: #176b5b; --cor-marca-forte: #0d4d41; --cor-marca-suave: #e7f3f0;
+  --cor-destaque: #d99b20; --cor-texto: #182522; --cor-texto-2: #5b6965;
+  --cor-fundo: #f5f7f6; --cor-superficie: #fff; --cor-borda: #dce4e1;
+  --cor-erro: #a12b2b; --cor-sucesso: #176b5b;
+  --fonte: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --fs-xs: .75rem; --fs-sm: .875rem; --fs-base: 1rem; --fs-lg: 1.25rem;
+  --fs-xl: clamp(1.75rem, 4vw, 3rem); --lh: 1.55;
+  --esp-1: .25rem; --esp-2: .5rem; --esp-3: .75rem; --esp-4: 1rem;
+  --esp-5: 1.5rem; --esp-6: 2rem; --esp-7: 3rem; --esp-8: 5rem;
+  --raio-sm: .5rem; --raio: .875rem; --raio-lg: 1.5rem; --raio-pill: 999px;
+  --borda: 1px solid var(--cor-borda); --sombra: 0 8px 30px rgb(24 37 34 / .08);
+  --sombra-hover: 0 14px 38px rgb(24 37 34 / .14); --largura: 76rem;
+  --header-altura: 4.5rem; --transicao: 180ms ease;
+  --foco: 3px solid #d99b20; --bp-mobile: 600px; --bp-tablet: 900px; --bp-wide: 1200px;
+}

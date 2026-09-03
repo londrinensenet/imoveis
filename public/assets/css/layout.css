@@ -1,0 +1,22 @@
+.container { width: min(calc(100% - 2rem), var(--largura)); margin-inline: auto; }
+.site-header { position: sticky; z-index: 20; top: 0; min-height: var(--header-altura); background: rgb(255 255 255 / .96); border-bottom: var(--borda); backdrop-filter: blur(12px); }
+.header-inner { min-height: var(--header-altura); display: flex; align-items: center; gap: var(--esp-5); }
+.marca { display: inline-flex; align-items: center; gap: .6rem; color: var(--cor-texto); font-size: 1.15rem; font-weight: 750; text-decoration: none; white-space: nowrap; }
+.marca-simbolo { display: grid; place-items: center; width: 2.25rem; aspect-ratio: 1; border-radius: .65rem; color: #fff; background: var(--cor-marca); }
+.nav-principal { display: flex; align-items: center; gap: var(--esp-1); margin-left: auto; }
+.nav-principal a { padding: .7rem .65rem; border-radius: var(--raio-sm); color: var(--cor-texto); font-size: var(--fs-sm); text-decoration: none; }
+.nav-principal a:hover, .nav-principal a[aria-current="page"] { color: var(--cor-marca-forte); background: var(--cor-marca-suave); }
+.menu-toggle { display: none; margin-left: auto; border: var(--borda); border-radius: var(--raio-sm); background: #fff; }
+main { min-height: 70vh; }
+.page-main { padding-block: var(--esp-6) var(--esp-8); }
+.section { padding-block: var(--esp-7); }
+.section-head { display: flex; justify-content: space-between; align-items: end; gap: var(--esp-4); margin-bottom: var(--esp-5); }
+.section-head h2, .section-head p { margin: 0; }
+.site-footer { padding-block: var(--esp-7) var(--esp-5); color: #dbe8e4; background: #102c27; }
+.footer-grid { display: grid; grid-template-columns: 1.5fr repeat(3, 1fr); gap: var(--esp-6); }
+.site-footer h2, .site-footer h3 { color: #fff; }
+.site-footer a { display: block; width: fit-content; margin-block: .45rem; color: #dbe8e4; }
+.footer-bottom { margin-top: var(--esp-6); padding-top: var(--esp-4); border-top: 1px solid rgb(255 255 255 / .18); font-size: var(--fs-sm); }
+.breadcrumb { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: var(--esp-4); color: var(--cor-texto-2); font-size: var(--fs-sm); }
+.duas-colunas { display: grid; grid-template-columns: minmax(0, 2fr) minmax(17rem, 1fr); gap: var(--esp-6); align-items: start; }
+.lateral-sticky { position: sticky; top: calc(var(--header-altura) + var(--esp-4)); }

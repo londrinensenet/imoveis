@@ -1,0 +1,1 @@
+.imovel-topo { display:flex;justify-content:space-between;align-items:end;gap:1rem }.imovel-topo h1 { margin-bottom:.35rem }.imovel-preco { font-size:clamp(1.5rem,4vw,2.25rem) }.navegacao-imovel { display:flex;justify-content:space-between;gap:1rem;margin-top:2rem }

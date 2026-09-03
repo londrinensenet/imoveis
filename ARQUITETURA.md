@@ -186,3 +186,7 @@ Na FASE 1, diretórios deliberadamente vazios são registrados exclusivamente po
 ## 12. Motor público de filtros e listagens
 
 A busca pública continua integralmente estática e opera sobre os shards públicos. Um registro explícito de procedência limita filtros aos campos VRSync permitidos e a uma allowlist de Features, sem derivação de `Description`. O estado multilógica é reproduzível pela URL; a unidade canônica de área é m². Um controlador de filtros atende os quatro modos responsivos e um único renderizador atende grade/lista e cards por categoria. Essas decisões detalham, sem substituir, as regras das seções 3, 5 e 6.
+
+## 13. Sistema visual e navegação pública
+
+A implementação pública organiza tokens, base, layout, componentes, responsividade e estilos por página sob `public/assets/css/`, mantendo `site.css` como ponto de entrada. Início, resultados, detalhe, anunciantes, favoritos, comparação e 404 são documentos estáticos navegáveis. Filtros permanecem canônicos na querystring; preferências, favoritos e comparação são exclusivamente locais ao navegador. Componentes criam nós DOM e validam URLs públicas, preservando a fronteira absoluta de publicação e as decisões das seções anteriores.
