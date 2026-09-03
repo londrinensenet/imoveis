@@ -6,10 +6,12 @@ ROOT=Path(__file__).parents[2]
 
 class WorkflowAndExposureTests(unittest.TestCase):
     def test_agenda_fuso_e_horarios(self):
-        sync=(ROOT/".github/workflows/sincronizar.yml").read_text()
+        sync=(ROOT/".github/workflows/sincronizar-feeds.yml").read_text()
         self.assertIn("America/Sao_Paulo",sync)
         self.assertIn("{9, 12, 15, 18, 23}",sync)
-        self.assertIn("cron: '0 * * * *'",sync)
+        # GitHub agenda em UTC; 23h de Brasília cruza para 02h do dia seguinte.
+        self.assertIn("cron: '0 12,15,18,21 * * *'",sync)
+        self.assertIn("cron: '0 2 * * *'",sync)
 
     def test_permissoes_publicacao_e_gates(self):
         for path in (ROOT/".github/workflows").glob("*.yml"):
