@@ -1,8 +1,8 @@
-@import url("tokens.css");
-@import url("base.css");
-@import url("layout.css");
-@import url("components.css");
-@import url("responsive.css");
+@import url("tokens.css?v=20260903-1");
+@import url("base.css?v=20260903-1");
+@import url("layout.css?v=20260903-1");
+@import url("components.css?v=20260903-1");
+@import url("responsive.css?v=20260903-1");
 
 /* Ponto de entrada legado. Os estilos ficam separados por responsabilidade. */
 /* Compatibilidade auditável: @media(max-width:800px), :focus, outline:3px, color:#17212b, background:#f5f7f6. */

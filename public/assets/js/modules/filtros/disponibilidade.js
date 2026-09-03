@@ -1,3 +1,3 @@
-import{DEFINICOES,FEATURES_OFICIAIS}from"./definicoes.js";
+import{DEFINICOES,FEATURES_OFICIAIS}from"./definicoes.js?v=20260903-1";
 export function definicoesDisponiveis(itens,categoria){if(!categoria)return DEFINICOES.filter(x=>x.categorias==="*");return DEFINICOES.filter(d=>(d.categorias==="*"||d.categorias.includes(categoria))&&temDado(d,itens))}
 function temDado(d,itens){const map={areaUtil:"area_util",areaTerreno:"area_terreno",areaRural:"area",features:"features"},campo=map[d.id]||d.id;if(d.categorias==="*")return true;if(campo==="features")return itens.some(x=>x.features?.some(f=>FEATURES_OFICIAIS.includes(f)));return itens.some(x=>Array.isArray(x[campo])?x[campo].length:x[campo]>0||typeof x[campo]==="string"&&x[campo])}
