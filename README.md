@@ -26,3 +26,7 @@ O site público possui motor multilógica com filtros dependentes, contagens, es
 ## Portal visual e páginas públicas
 
 O portal público possui sistema visual modular sem framework ou fonte externa, páginas de início, resultados, imóvel, anunciantes, favoritos e comparação, além de estados institucionais e 404. O ponto de entrada do CSS é `public/assets/css/site.css`; componentes, breakpoints, acessibilidade e personalização estão documentados em [`docs/design/SISTEMA-VISUAL.md`](docs/design/SISTEMA-VISUAL.md). Sirva `public/` por HTTP para desenvolvimento; as rotas usam arquivos estáticos e query parameters compatíveis com GitHub Pages.
+
+## Fundação operacional Cloudflare
+
+O painel operacional está em `/painel/`; a API administrativa é executada por `src/admin/worker.js`. Para validar e gerar a saída isolada do Pages, execute `pytest -q`, `node --test tests/js/*.test.mjs` e `python scripts/build.py`. Consulte `docs/CONFIGURACAO-CLOUDFLARE-GITHUB.md` antes da implantação.

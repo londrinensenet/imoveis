@@ -1,0 +1,1 @@
+export function reconciliar(anterior,atual){const canonico=v=>JSON.stringify(v,Object.keys(v).sort());return canonico(anterior)===canonico(atual)?{alterado:false,valor:anterior}:{alterado:true,valor:atual}}

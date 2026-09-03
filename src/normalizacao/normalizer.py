@@ -208,6 +208,12 @@ def normalize(raw: dict, client_id: str) -> dict:
         "features": _features(raw),
         "contact_info": _contact_info(raw),
     }
+    # Um anúncio só entra na publicação quando a operação declarada possui preço
+    # numérico estritamente positivo. A validação ocorre no core, antes dos JSONs.
+    required_price = result["preco_venda" if purpose == "venda" else "preco_aluguel"]
+    if required_price <= 0:
+        raise ValueError("Imóvel sem preço válido para a operação")
+    result["preco"] = required_price
     tour = public_url(_first(raw, "VirtualTourLink", "virtual_tour_link"))
     if tour:
         result["virtual_tour_link"] = tour
