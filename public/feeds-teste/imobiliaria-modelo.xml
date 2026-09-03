@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FEED PÚBLICO SINTÉTICO. NÃO CONTÉM OFERTAS OU CONTATOS REAIS. -->
+<imoveis ambiente="teste" sintetico="true" cliente="cliente-teste-001">
+  <imovel>
+    <codigo>TST-001</codigo><titulo>Apartamento no Centro</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Centro</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>apartamento</tipo>
+    <preco>420000</preco><area>78</area><quartos>2</quartos><suites>0</suites><banheiros>1</banheiros><vagas>1</vagas>
+    <Zone>Central</Zone><Latitude>-23.300000</Latitude><Longitude>-51.160000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-002</codigo><titulo>Casa com quintal na Vila Casoni</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Vila Casoni</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>casa</tipo>
+    <preco>510000</preco><area>145</area><quartos>3</quartos><suites>1</suites><banheiros>2</banheiros><vagas>2</vagas>
+    <Zone>Central</Zone><Latitude>-23.306000</Latitude><Longitude>-51.167000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-003</codigo><titulo>Apartamento para alugar na Gleba Palhano</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Gleba Palhano</bairro><uf>PR</uf><finalidade>aluguel</finalidade><tipo>apartamento</tipo>
+    <preco>2800</preco><area>92</area><quartos>3</quartos><suites>1</suites><banheiros>2</banheiros><vagas>2</vagas>
+    <Zone>Sul</Zone><Latitude>-23.312000</Latitude><Longitude>-51.174000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-004</codigo><titulo>Casa no Jardim Bandeirantes</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Jardim Bandeirantes</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>casa</tipo>
+    <preco>390000</preco><area>120</area><quartos>3</quartos><suites>1</suites><banheiros>2</banheiros><vagas>2</vagas>
+    <Zone>Oeste</Zone><Latitude>-23.318000</Latitude><Longitude>-51.181000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-005</codigo><titulo>Terreno no Jardim Leonor</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Jardim Leonor</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>terreno</tipo>
+    <preco>180000</preco><area>300</area><quartos>0</quartos><suites>0</suites><banheiros>0</banheiros><vagas>0</vagas>
+    <Zone>Oeste</Zone><Latitude>-23.324000</Latitude><Longitude>-51.188000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-006</codigo><titulo>Chácara compacta em área rural</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Limoeiro</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>rural</tipo>
+    <preco>650000</preco><area>1000</area><quartos>2</quartos><suites>0</suites><banheiros>2</banheiros><vagas>3</vagas>
+    <Zone>Rural</Zone><Latitude>-23.330000</Latitude><Longitude>-51.160000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-007</codigo><titulo>Sítio produtivo de dois hectares</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Guaravera</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>rural</tipo>
+    <preco>1350000</preco><area>20000</area><quartos>3</quartos><suites>1</suites><banheiros>2</banheiros><vagas>4</vagas>
+    <Zone>Rural</Zone><Latitude>-23.300000</Latitude><Longitude>-51.167000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-008</codigo><titulo>Sala comercial no Centro</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Centro</bairro><uf>PR</uf><finalidade>aluguel</finalidade><tipo>comercial</tipo>
+    <preco>1900</preco><area>48</area><quartos>0</quartos><suites>0</suites><banheiros>1</banheiros><vagas>1</vagas>
+    <Zone>Central</Zone><Latitude>-23.306000</Latitude><Longitude>-51.174000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-009</codigo><titulo>Galpão na Zona Norte</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Cinco Conjuntos</bairro><uf>PR</uf><finalidade>aluguel</finalidade><tipo>galpao</tipo>
+    <preco>8500</preco><area>620</area><quartos>0</quartos><suites>0</suites><banheiros>2</banheiros><vagas>6</vagas>
+    <Zone>Norte</Zone><Latitude>-23.312000</Latitude><Longitude>-51.181000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-010</codigo><titulo>Apartamento próximo à UEL</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Jardim Sabará</bairro><uf>PR</uf><finalidade>aluguel</finalidade><tipo>apartamento</tipo>
+    <preco>1650</preco><area>58</area><quartos>2</quartos><suites>0</suites><banheiros>1</banheiros><vagas>1</vagas>
+    <Zone>Oeste</Zone><Latitude>-23.318000</Latitude><Longitude>-51.188000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-011</codigo><titulo>Casa no Jardim Califórnia</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Jardim Califórnia</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>casa</tipo>
+    <preco>460000</preco><area>132</area><quartos>3</quartos><suites>1</suites><banheiros>2</banheiros><vagas>2</vagas>
+    <Zone>Leste</Zone><Latitude>-23.324000</Latitude><Longitude>-51.160000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-012</codigo><titulo>Apartamento no Aurora</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Aurora</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>apartamento</tipo>
+    <preco>580000</preco><area>105</area><quartos>3</quartos><suites>1</suites><banheiros>2</banheiros><vagas>2</vagas>
+    <Zone>Sul</Zone><Latitude>-23.330000</Latitude><Longitude>-51.167000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-013</codigo><titulo>Terreno comercial na Higienópolis</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Higienópolis</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>terreno</tipo>
+    <preco>980000</preco><area>540</area><quartos>0</quartos><suites>0</suites><banheiros>0</banheiros><vagas>0</vagas>
+    <Zone>Central</Zone><Latitude>-23.300000</Latitude><Longitude>-51.174000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-014</codigo><titulo>Loja térrea na Avenida Saul Elkind</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Conjunto Vivi Xavier</bairro><uf>PR</uf><finalidade>aluguel</finalidade><tipo>comercial</tipo>
+    <preco>4200</preco><area>160</area><quartos>0</quartos><suites>0</suites><banheiros>2</banheiros><vagas>3</vagas>
+    <Zone>Norte</Zone><Latitude>-23.306000</Latitude><Longitude>-51.181000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-015</codigo><titulo>Casa para alugar no Aeroporto</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Aeroporto</bairro><uf>PR</uf><finalidade>aluguel</finalidade><tipo>casa</tipo>
+    <preco>2200</preco><area>110</area><quartos>3</quartos><suites>1</suites><banheiros>2</banheiros><vagas>2</vagas>
+    <Zone>Leste</Zone><Latitude>-23.312000</Latitude><Longitude>-51.188000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-016</codigo><titulo>Apartamento compacto no Centro</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Centro</bairro><uf>PR</uf><finalidade>aluguel</finalidade><tipo>apartamento</tipo>
+    <preco>1250</preco><area>42</area><quartos>1</quartos><suites>0</suites><banheiros>1</banheiros><vagas>0</vagas>
+    <Zone>Central</Zone><Latitude>-23.318000</Latitude><Longitude>-51.160000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-017</codigo><titulo>Terreno na Zona Sul</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Parque das Indústrias</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>terreno</tipo>
+    <preco>240000</preco><area>360</area><quartos>0</quartos><suites>0</suites><banheiros>0</banheiros><vagas>0</vagas>
+    <Zone>Sul</Zone><Latitude>-23.324000</Latitude><Longitude>-51.167000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-018</codigo><titulo>Casa ampla no Jardim do Sol</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Jardim do Sol</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>casa</tipo>
+    <preco>720000</preco><area>210</area><quartos>4</quartos><suites>2</suites><banheiros>3</banheiros><vagas>3</vagas>
+    <Zone>Oeste</Zone><Latitude>-23.330000</Latitude><Longitude>-51.174000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-019</codigo><titulo>Chácara de seiscentos metros quadrados</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Patrimônio Heimtal</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>rural</tipo>
+    <preco>480000</preco><area>600</area><quartos>2</quartos><suites>0</suites><banheiros>1</banheiros><vagas>2</vagas>
+    <Zone>Rural</Zone><Latitude>-23.300000</Latitude><Longitude>-51.181000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-020</codigo><titulo>Galpão logístico na Zona Leste</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Cilo III</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>galpao</tipo>
+    <preco>2100000</preco><area>980</area><quartos>0</quartos><suites>0</suites><banheiros>4</banheiros><vagas>8</vagas>
+    <Zone>Leste</Zone><Latitude>-23.306000</Latitude><Longitude>-51.188000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-021</codigo><titulo>Apartamento familiar na Zona Norte</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Conjunto Parigot de Souza</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>apartamento</tipo>
+    <preco>310000</preco><area>68</area><quartos>2</quartos><suites>0</suites><banheiros>1</banheiros><vagas>1</vagas>
+    <Zone>Norte</Zone><Latitude>-23.312000</Latitude><Longitude>-51.160000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-022</codigo><titulo>Casa térrea na Zona Sul</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Jardim Piza</bairro><uf>PR</uf><finalidade>aluguel</finalidade><tipo>casa</tipo>
+    <preco>2600</preco><area>138</area><quartos>3</quartos><suites>1</suites><banheiros>2</banheiros><vagas>2</vagas>
+    <Zone>Sul</Zone><Latitude>-23.318000</Latitude><Longitude>-51.167000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-023</codigo><titulo>Sala para consultório</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Centro</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>comercial</tipo>
+    <preco>230000</preco><area>39</area><quartos>0</quartos><suites>0</suites><banheiros>1</banheiros><vagas>1</vagas>
+    <Zone>Central</Zone><Latitude>-23.324000</Latitude><Longitude>-51.174000</Longitude>
+    <fotos><foto>https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&amp;fit=crop&amp;w=1200&amp;q=80</foto></fotos>
+  </imovel>
+  <imovel>
+    <codigo>TST-024</codigo><titulo>Área rural de cinco hectares</titulo>
+    <descricao>ANÚNCIO SINTÉTICO PARA TESTES. Imóvel fictício sem oferta comercial real.</descricao>
+    <cidade>Londrina</cidade><bairro>Warta</bairro><uf>PR</uf><finalidade>venda</finalidade><tipo>rural</tipo>
+    <preco>1850000</preco><area>50000</area><quartos>0</quartos><suites>0</suites><banheiros>0</banheiros><vagas>0</vagas>
+    <Zone>Rural</Zone><Latitude>-23.330000</Latitude><Longitude>-51.181000</Longitude>
+    
+  </imovel>
+</imoveis>
