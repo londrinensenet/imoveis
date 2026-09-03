@@ -4,6 +4,7 @@ import test from "node:test";
 
 globalThis.crypto ??= webcrypto;
 const {default: worker, testables} = await import("../../src/admin/worker.js");
+const {onRequest} = await import("../../functions/api/[[path]].js");
 const secretKey = ["SESSION", "SECRET"].join("_");
 const passwordKey = ["SUPERADMIN", "PASSWORD", "HASH"].join("_");
 const cloudflareKey = ["CLOUDFLARE", "API", "TOKEN"].join("_");
@@ -52,43 +53,21 @@ test("sessão assinada autentica, adulteração e expiração não", async () =>
   assert.equal(await testables.authenticate(new Request(`${env.ADMIN_ORIGIN}/api/x`, {headers: {cookie: `session=${expired}`}}), env), null);
 });
 
-test("primeiro login exige troca, persiste novo hash e invalida senha e sessão temporárias", async t => {
-  const env = await environment("change");
+test("ADMIN / TESTE acessa diretamente a homologação sem hash ou APIs externas", async t => {
+  const env = await environment("homologation");
+  delete env[passwordKey];
   const originalFetch = globalThis.fetch;
-  const calls = [];
-  globalThis.fetch = async (url, options = {}) => {
-    calls.push({url: String(url), options});
-    if (String(url).endsWith("/accounts?per_page=50")) return Response.json({success: true, result: [{id: "account"}]});
-    if (String(url).includes("/pages/projects?")) return Response.json({success: true, result: [{name: "portal", domains: [new URL(env.ADMIN_ORIGIN).hostname]}]});
-    if (options.method === "PATCH") return Response.json({success: true, result: {}});
-    throw new Error("chamada inesperada");
-  };
+  let externalCalls = 0;
+  globalThis.fetch = async () => { externalCalls += 1; throw new Error("chamada inesperada"); };
   t.after(() => { globalThis.fetch = originalFetch; });
 
   const login = await worker.fetch(request(env, "/api/login", {usuario: "ADMIN", senha: "TESTE"}), env);
   assert.equal(login.status, 200);
-  assert.deepEqual(await login.json(), {papel: "password-change", troca_senha_obrigatoria: true});
-  const temporaryCookie = cookieValue(login);
-  const restricted = await worker.fetch(request(env, "/api/sincronizar", {}, {cookie: `session=${temporaryCookie}`}), env);
-  assert.equal(restricted.status, 401);
-
-  const mismatch = await worker.fetch(request(env, "/api/trocar-senha", {nova_senha: "senha-nova-segura", confirmacao: "senha-diferente"}, {cookie: `session=${temporaryCookie}`}), env);
-  assert.equal(mismatch.status, 400);
-
-  const changed = await worker.fetch(request(env, "/api/trocar-senha", {nova_senha: "senha-nova-segura", confirmacao: "senha-nova-segura"}, {cookie: `session=${temporaryCookie}`}), env);
-  assert.equal(changed.status, 200);
-  assert.match(changed.headers.get("set-cookie"), /Max-Age=0/);
-  const patch = calls.find(call => call.options.method === "PATCH");
-  const persisted = JSON.parse(patch.options.body).deployment_configs.production.env_vars[passwordKey];
-  assert.equal(persisted.type, "secret_text");
-  assert.notEqual(persisted.value, env[passwordKey]);
-  assert.equal(await testables.verifyPassword("senha-nova-segura", persisted.value), true);
-
-  assert.equal((await worker.fetch(request(env, "/api/login", {usuario: "ADMIN", senha: "TESTE"}), env)).status, 401);
-  const newLogin = await worker.fetch(request(env, "/api/login", {usuario: "ADMIN", senha: "senha-nova-segura"}), env);
-  assert.equal(newLogin.status, 200);
-  assert.equal((await newLogin.json()).papel, "superadmin");
-  assert.equal(await testables.authenticate(new Request(`${env.ADMIN_ORIGIN}/api/x`, {headers: {cookie: `session=${temporaryCookie}`}}), env), null);
+  assert.deepEqual(await login.json(), {papel: "superadmin", troca_senha_obrigatoria: false});
+  const token = cookieValue(login);
+  assert.ok(token);
+  assert.equal((await testables.authenticate(new Request(`${env.ADMIN_ORIGIN}/api/x`, {headers: {cookie: `session=${token}`}}), env)).role, "superadmin");
+  assert.equal(externalCalls, 0);
 });
 
 test("logout revoga o cookie no navegador", async () => {
@@ -145,11 +124,62 @@ test("PBKDF2 aceita somente custo fixo e formato limitado", async () => {
   assert.equal(await testables.verifyPassword("qualquer", "pbkdf2-sha256$310000$curto$curto"), false);
 });
 
-test("tentativas excessivas de login são limitadas", async () => {
+test("limitador conta apenas falhas, não prolonga bloqueio e é limpo pelo acesso de homologação", async t => {
   const env = await environment("rate");
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => Response.json({message: "not found"}, {status: 404});
+  t.after(() => { globalThis.fetch = originalFetch; });
+  const headers = {"cf-connecting-ip": "192.0.2.77"};
   let response;
-  for (let index = 0; index < 11; index += 1) response = await worker.fetch(request(env, "/api/login", {usuario: "x", senha: "incorreta"}, {"cf-connecting-ip": "192.0.2.77"}), env);
+  for (let index = 0; index < 10; index += 1) {
+    response = await worker.fetch(request(env, "/api/login", {usuario: "x", senha: "incorreta"}, headers), env);
+    assert.equal(response.status, 401);
+  }
+  response = await worker.fetch(request(env, "/api/login", {usuario: "x", senha: "incorreta"}, headers), env);
   assert.equal(response.status, 429);
+  const retryAfter = response.headers.get("retry-after");
+  assert.match(retryAfter, /^\d+$/);
+  const blockedAgain = await worker.fetch(request(env, "/api/login", {usuario: "x", senha: "incorreta"}, headers), env);
+  assert.ok(Number(blockedAgain.headers.get("retry-after")) <= Number(retryAfter));
+
+  const login = await worker.fetch(request(env, "/api/login", {usuario: "ADMIN", senha: "TESTE"}, headers), env);
+  assert.equal(login.status, 200);
+  assert.deepEqual(await login.json(), {papel: "superadmin", troca_senha_obrigatoria: false});
+  assert.equal((await worker.fetch(request(env, "/api/login", {usuario: "ADMIN", senha: "errada"}, headers), env)).status, 401);
+});
+
+test("somente ADMIN / TESTE usa o bypass e clientes mantêm o fluxo normal", async t => {
+  const env = await environment("client-login");
+  const salt = "saltClienteTeste1";
+  const clientHash = `pbkdf2-sha256$310000$${salt}$${await testables.passwordHash("senha-cliente", salt)}`;
+  const originalFetch = globalThis.fetch;
+  let githubCalls = 0;
+  globalThis.fetch = async url => {
+    githubCalls += 1;
+    if (String(url).includes("private/clientes/cliente-aaa/acesso.json")) {
+      const content = btoa(JSON.stringify({ativo: true, senha_hash: clientHash}));
+      return Response.json({content, sha: "sha"});
+    }
+    return Response.json({message: "not found"}, {status: 404});
+  };
+  t.after(() => { globalThis.fetch = originalFetch; });
+
+  assert.equal((await worker.fetch(request(env, "/api/login", {usuario: "ADMIN", senha: "outra"}), env)).status, 401);
+  assert.equal((await worker.fetch(request(env, "/api/login", {usuario: "cliente-aaa", senha: "TESTE"}), env)).status, 401);
+  const client = await worker.fetch(request(env, "/api/login", {usuario: "cliente-aaa", senha: "senha-cliente"}), env);
+  assert.equal(client.status, 200);
+  assert.deepEqual(await client.json(), {papel: "cliente", troca_senha_obrigatoria: false});
+  assert.ok(cookieValue(client));
+  assert.ok(githubCalls >= 2);
+});
+
+test("Pages Function aceita a mesma requisição do painel e rotas administrativas exigem sessão", async () => {
+  const env = await environment("pages-function");
+  const login = await onRequest({request: request(env, "/api/login", {usuario: "ADMIN", senha: "TESTE"}), env});
+  assert.equal(login.status, 200);
+  assert.match(login.headers.get("set-cookie"), /^session=.+HttpOnly; Secure; SameSite=Strict$/);
+  const unauthenticated = await onRequest({request: request(env, "/api/sincronizar", {}), env});
+  assert.equal(unauthenticated.status, 401);
 });
 
 test("cliente sintético pode ser cadastrado, receber feed privado e ser sincronizado sem execução automática", async t => {

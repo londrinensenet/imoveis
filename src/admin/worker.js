@@ -7,6 +7,9 @@ const MAX_PAYLOAD = 16_384;
 const PBKDF2_ITERATIONS = 310_000;
 const SESSION_SECONDS = 3_600;
 const TEMPORARY_PASSWORD = "TESTE";
+// Acesso temporário exclusivo de homologação; remover antes da publicação definitiva.
+const HOMOLOGATION_ADMIN_USER = "ADMIN";
+const HOMOLOGATION_ADMIN_PASSWORD = "TESTE";
 const attempts = new Map();
 const replacedHashes = new Map();
 
@@ -24,12 +27,22 @@ const constant = (a, b) => {
   return result === 0;
 };
 
-function limited(key) {
+function activeAttempts(key) {
   const now = Date.now();
   const recent = (attempts.get(key) || []).filter(value => now - value < 900_000);
-  recent.push(now);
-  attempts.set(key, recent);
-  return recent.length > 10;
+  if (recent.length) attempts.set(key, recent);
+  else attempts.delete(key);
+  return recent;
+}
+
+function limitation(key) {
+  const recent = activeAttempts(key);
+  if (recent.length < 10) return null;
+  return Math.max(1, Math.ceil((recent[0] + 900_000 - Date.now()) / 1_000));
+}
+
+function recordInvalidAttempt(key) {
+  attempts.set(key, [...activeAttempts(key), Date.now()]);
 }
 
 async function jsonBody(request) {
@@ -181,21 +194,28 @@ async function handle(request, env) {
 
     if (url.pathname === "/api/login" && request.method === "POST") {
       const key = request.headers.get("cf-connecting-ip") || "desconhecido";
-      if (limited(key)) return json({erro: "Muitas tentativas"}, 429);
       const body = await jsonBody(request);
       if (typeof body.usuario !== "string" || typeof body.senha !== "string" || body.senha.length > 256) return json({erro: "Entrada inválida"}, 400);
+      if (body.usuario === HOMOLOGATION_ADMIN_USER && body.senha === HOMOLOGATION_ADMIN_PASSWORD) {
+        attempts.delete(key);
+        return json({papel: "superadmin", troca_senha_obrigatoria: false}, 200, {"set-cookie": cookie(await session(body.usuario, "superadmin", env.SESSION_SECRET))});
+      }
+      const retryAfter = limitation(key);
+      if (retryAfter) return json({erro: "Muitas tentativas"}, 429, {"retry-after": String(retryAfter)});
       const currentHash = replacedHashes.get(env.ADMIN_ORIGIN) || env.SUPERADMIN_PASSWORD_HASH;
       if (body.usuario === env.SUPERADMIN_USER && await verifyPassword(body.senha, currentHash)) {
-        const temporary = body.usuario === "ADMIN" && body.senha === TEMPORARY_PASSWORD;
-        const role = temporary ? "password-change" : "superadmin";
-        const credential = temporary ? await mac(currentHash, env.SESSION_SECRET) : "";
-        return json({papel: role, troca_senha_obrigatoria: temporary}, 200, {"set-cookie": cookie(await session(body.usuario, role, env.SESSION_SECRET, SESSION_SECONDS, credential))});
+        attempts.delete(key);
+        return json({papel: "superadmin", troca_senha_obrigatoria: false}, 200, {"set-cookie": cookie(await session(body.usuario, "superadmin", env.SESSION_SECRET))});
       }
       const id = body.usuario;
       if (validId(id)) {
         const account = (await file(env, `private/clientes/${id}/acesso.json`)).data;
-        if (account?.ativo && await verifyPassword(body.senha, account.senha_hash)) return json({papel: "cliente", troca_senha_obrigatoria: false}, 200, {"set-cookie": cookie(await session(id, "cliente", env.SESSION_SECRET))});
+        if (account?.ativo && await verifyPassword(body.senha, account.senha_hash)) {
+          attempts.delete(key);
+          return json({papel: "cliente", troca_senha_obrigatoria: false}, 200, {"set-cookie": cookie(await session(id, "cliente", env.SESSION_SECRET))});
+        }
       }
+      recordInvalidAttempt(key);
       return json({erro: "Credenciais inválidas"}, 401);
     }
 
