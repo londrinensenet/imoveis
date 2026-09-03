@@ -19,3 +19,7 @@ O estado canônico fica nos parâmetros da URL; Londrina, por ser padrão, é om
 ## Responsividade, grade e lista
 
 `listagem.js` é o único renderizador de cards e das visualizações. Desktop oferece grade de três colunas ou lista horizontal, tablet duas colunas e celular uma coluna vertical. A preferência é persistida em `localStorage`. O módulo cria nós DOM, não injeta dados com `innerHTML`, omite métricas vazias/incompatíveis e integra favorito, comparação e compartilhamento.
+
+## Integração com o sistema visual
+
+O filtro completo ocupa o hero inicial e envia a pesquisa confirmada para `resultados.html`; o compacto permanece sticky nessa página. O resultado apresenta título natural, quantidade, chips, ordenação e preferência grade/lista. `listagem.js` integra `favoritos.js` e `comparador.js`, limita métricas por categoria e cria todos os nós com APIs seguras do DOM. Favoritos reconciliam IDs removidos do índice; comparação mantém no máximo quatro IDs.

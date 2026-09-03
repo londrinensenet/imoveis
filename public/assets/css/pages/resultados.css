@@ -1,0 +1,1 @@
+.resultados-topo h1 { margin-bottom: .35rem; }.filtro-compacto { position: sticky; z-index: 10; top: calc(var(--header-altura) + .5rem); }

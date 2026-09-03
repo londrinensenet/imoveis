@@ -22,3 +22,7 @@ Requer Python 3.11 ou posterior e não possui dependências de produção. Execu
 ## Busca imobiliária
 
 O site público possui motor multilógica com filtros dependentes, contagens, estado compartilhável em URL, sugestões determinísticas e listagem responsiva em grade/lista. A procedência, categorias, unidades, persistência e comportamento responsivo estão documentados em [`docs/modulos/FILTROS-E-LISTAGENS.md`](docs/modulos/FILTROS-E-LISTAGENS.md). Os contratos públicos em `schemas/public/` incluem separadamente preços de venda/aluguel e atributos tipados dos cards.
+
+## Portal visual e páginas públicas
+
+O portal público possui sistema visual modular sem framework ou fonte externa, páginas de início, resultados, imóvel, anunciantes, favoritos e comparação, além de estados institucionais e 404. O ponto de entrada do CSS é `public/assets/css/site.css`; componentes, breakpoints, acessibilidade e personalização estão documentados em [`docs/design/SISTEMA-VISUAL.md`](docs/design/SISTEMA-VISUAL.md). Sirva `public/` por HTTP para desenvolvimento; as rotas usam arquivos estáticos e query parameters compatíveis com GitHub Pages.

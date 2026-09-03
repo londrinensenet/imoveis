@@ -23,3 +23,7 @@ No GitHub, abra **Settings → Pages**, selecione GitHub Actions e mantenha a pr
 ## Verificação do motor de busca
 
 Sem publicar, sirva `public/` em HTTP local, abra a página inicial e valide: cascata Cidade/Região/Bairro, URL ao pesquisar, voltar/avançar, resultado zero, teclado na gaveta, grade/lista e layout em 375 px, 768 px e 1280 px. Nunca use dados de `private/` nessa verificação.
+
+## Validação visual antes de publicar
+
+Sirva somente `public/` em HTTP e percorra início, resultados com querystring, detalhe, anunciante, favoritos, comparação e 404. Nas larguras de 375, 768, 1024 e 1440 px, confira ausência de rolagem horizontal, menu por teclado e Escape, filtro completo/compacto, chips, alternância grade/lista, contato móvel e foco visível. Confira o console e as falhas simuladas de rede/JSON. Se não houver dados públicos, valide os estados vazios; nunca crie anúncios fictícios para a conferência.
