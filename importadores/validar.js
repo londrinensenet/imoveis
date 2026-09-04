@@ -1,0 +1,1 @@
+export function validar(imovel){const operacoes=[];for(const [tipo,campo] of [['venda','preco_venda'],['aluguel','preco_aluguel']]){const valor=Number(imovel[campo]);if(Number.isFinite(valor)&&valor>0)operacoes.push({...imovel,operacao:tipo,preco:valor})}return operacoes}

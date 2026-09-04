@@ -1,7 +1,8 @@
 name: Sincronizar todos
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 12,15,18,21 * * *'
+    - cron: '0 2 * * *'
   workflow_dispatch:
     inputs:
       confirmar: {description: 'Digite SINCRONIZAR para operação real', required: false, type: string}

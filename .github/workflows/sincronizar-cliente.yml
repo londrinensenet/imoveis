@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
     inputs:
       cliente_id: {description: 'ID lógico do cliente', required: true, type: string}
-      confirmar: {description: 'Digite SINCRONIZAR', required: true, type: string}
 permissions: {}
 concurrency:
   group: sincronizacao-publica
@@ -24,7 +23,7 @@ jobs:
         run: python -c 'import os,re,sys;sys.exit(0 if re.fullmatch(r"[a-z0-9][a-z0-9-]{2,39}",os.environ["CLIENTE_ID"]) else 1)'
   publicar:
     needs: validar
-    if: vars.ENABLE_REAL_SYNC == 'true' && inputs.confirmar == 'SINCRONIZAR'
+    if: vars.ENABLE_REAL_SYNC == 'true'
     permissions: {contents: write}
     runs-on: ubuntu-latest
     steps:
