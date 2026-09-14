@@ -32,7 +32,7 @@ O acesso ADMIN/TESTE de homologação foi preservado conforme a PR #12. Ele não
 
 O volume restante deve ser entregue em incrementos verticais, sem controles inoperantes:
 
-1. **Identidade definitiva:** usuários e funções persistidos privadamente, matriz de permissões, sessões revogáveis, alteração/redefinição de senha e desativação segura de ADMIN/TESTE.
+1. **Identidade definitiva:** usuários e funções persistidos privadamente, matriz de permissões, sessões revogáveis, autorização por e-mail e desativação segura de ADMIN/TESTE.
 2. **Observabilidade:** registros privados sanitizados de auditoria e sincronização, consulta/paginação, correlação com workflows e diagnóstico completo das integrações.
 3. **Catálogo administrativo:** índices administrativos gerados privadamente pelo sincronizador, imóveis/rejeições/origem permitida e exportações, mantendo XML como autoridade.
 4. **Configuração versionada:** conteúdo institucional e limites operacionais com validação, histórico Git e restauração confirmada.

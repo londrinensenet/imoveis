@@ -75,10 +75,10 @@ O sistema é um portal imobiliário estático e multicliente para imobiliárias 
 - Clientes acessarão e modificarão somente os dados permitidos de sua própria conta.
 - Papéis e permissões serão separados e verificados no servidor; ocultar controles na interface não será considerado autorização.
 - Autenticação, sessões, desafios e dados administrativos serão privados e não dependerão de JSONs públicos.
-- Senhas nunca serão armazenadas em texto puro.
-- Nenhuma senha real será criada ou versionada durante as fases de código.
-- O sistema terá procedimento seguro de primeiro acesso e de redefinição administrativa, sem revelar a senha ao SUPERADMIN.
-- O modelo definitivo de autenticação, sessões e autorização será implementado integralmente na FASE 2 conforme estes requisitos, sem D1, KV ou dados públicos como armazenamento de identidade.
+- Google Identity Services é a única autenticação de administradores e clientes; o Worker valida assinatura, emissor, audiência, expiração e e-mail verificado do ID token.
+- O sistema autoriza somente e-mails ativos cadastrados privadamente, atribui os papéis MASTER, ADMIN ou CLIENTE e mantém sessão própria HMAC sem armazenar o ID token.
+- Não existem senha local, bootstrap por senha, recuperação ou redefinição de senha. O MASTER permanente é `londrinense.net@gmail.com`.
+- Autenticação, sessão e autorização não usam D1, KV nem dados públicos como armazenamento de identidade.
 - Operações administrativas aceitarão somente ações lógicas permitidas; o usuário nunca poderá indicar arbitrariamente um caminho Git para leitura ou escrita.
 
 ## 8. Segurança

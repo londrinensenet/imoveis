@@ -29,4 +29,4 @@ O portal público possui sistema visual modular sem framework ou fonte externa, 
 
 ## Fundação operacional Cloudflare
 
-O painel operacional está em `/painel/`; a API administrativa é executada por `src/admin/worker.js`. Para validar e gerar a saída isolada do Pages, execute `pytest -q`, `node --test tests/js/*.test.mjs` e `python scripts/build.py`. Consulte `docs/CONFIGURACAO-CLOUDFLARE-GITHUB.md` antes da implantação.
+O painel operacional está em `/painel/`; Google Identity Services é a única autenticação e a API administrativa é executada por `src/admin/worker.js`. O Client ID público chega ao frontend por `GET /api/config`; veja [`docs/AUTENTICACAO-GOOGLE.md`](docs/AUTENTICACAO-GOOGLE.md). Para validar e gerar a saída isolada do Pages, execute `pytest -q`, `node --test tests/js/*.test.mjs` e `python scripts/build.py`. Consulte `docs/CONFIGURACAO-CLOUDFLARE-GITHUB.md` antes da implantação.
