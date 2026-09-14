@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Administrador privado",
+  "type": "object",
+  "required": [
+    "id",
+    "nome",
+    "email",
+    "role",
+    "ativo",
+    "permissoes"
+  ],
+  "properties": {
+    "id": {
+      "anyOf": [
+        {
+          "const": "MASTER"
+        },
+        {
+          "pattern": "^A(?:0[1-9]|[1-9][0-9])$"
+        }
+      ]
+    },
+    "nome": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254
+    },
+    "role": {
+      "enum": [
+        "MASTER",
+        "SUPERADMIN",
+        "ADMIN"
+      ]
+    },
+    "ativo": {
+      "type": "boolean"
+    },
+    "foto_url": {
+      "anyOf": [
+        {
+          "const": ""
+        },
+        {
+          "type": "string",
+          "format": "uri"
+        }
+      ]
+    },
+    "permissoes": {
+      "type": "object",
+      "properties": {
+        "incluir": {
+          "type": "boolean"
+        },
+        "editar": {
+          "type": "boolean"
+        },
+        "excluir": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

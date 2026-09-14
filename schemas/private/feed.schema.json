@@ -1,1 +1,36 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Configuração privada de feed","type":"object","required":["cliente_id","feed_url","formato","ativo"],"properties":{"cliente_id":{"type":"string","pattern":"^[0-9]{5}$"},"feed_url":{"type":"string","format":"uri","pattern":"^https?://"},"origem":{"type":"string","maxLength":50},"formato":{"enum":["xml","json"]},"ativo":{"type":"boolean"}},"additionalProperties":false}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Configuração privada de feed",
+  "type": "object",
+  "required": [
+    "cliente_id",
+    "feed_url",
+    "formato",
+    "ativo"
+  ],
+  "properties": {
+    "cliente_id": {
+      "type": "string",
+      "pattern": "^[0-9]{5}$"
+    },
+    "feed_url": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https?://"
+    },
+    "origem": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "formato": {
+      "enum": [
+        "xml",
+        "json"
+      ]
+    },
+    "ativo": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false
+}

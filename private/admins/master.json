@@ -1,7 +1,13 @@
 {
-  "id": "master",
+  "id": "MASTER",
   "nome": "SUPERADMIN",
   "email": "londrinense.net@gmail.com",
   "role": "MASTER",
-  "ativo": true
+  "ativo": true,
+  "foto_url": "",
+  "permissoes": {
+    "incluir": true,
+    "editar": true,
+    "excluir": true
+  }
 }

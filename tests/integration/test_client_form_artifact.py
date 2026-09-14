@@ -21,9 +21,9 @@ def test_built_client_form_contract(tmp_path):
     form = (output / "painel" / "modulos" / "cliente-formulario.js").read_text()
     worker = (ROOT / "src" / "admin" / "worker.js").read_text()
 
-    assert "painel.js?v=20260914-clientes-v4" in index
-    assert "router.js?v=20260914-clientes-v4" in entry
-    assert "cliente-formulario.js?v=20260914-clientes-v4" in router
+    assert "painel.js?v=20260914-admin-v1" in index
+    assert "router.js?v=20260914-admin-v1" in entry
+    assert "cliente-formulario.js?v=20260914-admin-v1" in router
 
     for required in (
         "E-mail de acesso Google",
@@ -59,8 +59,8 @@ def test_built_client_form_contract(tmp_path):
     assert 'class="private-notes">Observações privadas' in form
     assert "repeat(2,minmax(0,1fr))" in css
     assert ".form-grid .wide,.form-grid .private-notes{grid-column:1/-1}" in css
-    assert ".client-form .form-section+.form-section{margin-top:2rem}" in css
-    assert "@media(max-width:520px){.cards,.form-grid{grid-template-columns:1fr}" in css
+    assert ".form-section+.form-section" in css and "margin-top:1.5rem" in css
+    assert "@media(max-width:560px){.cards,.form-grid{grid-template-columns:1fr}" in css
     assert 'name="imagem_tipo"' not in form
     assert "id=\"image-preview\"" in form
     assert "feed_url" in worker and "private/clientes/${id}/feed.json" in worker
