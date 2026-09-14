@@ -21,22 +21,28 @@ def test_built_client_form_contract(tmp_path):
     form = (output / "painel" / "modulos" / "cliente-formulario.js").read_text()
     worker = (ROOT / "src" / "admin" / "worker.js").read_text()
 
-    assert "painel.js?v=20260914-clientes-v3" in index
-    assert "router.js?v=20260914-clientes-v3" in entry
-    assert "cliente-formulario.js?v=20260914-clientes-v3" in router
+    assert "painel.js?v=20260914-clientes-v4" in index
+    assert "router.js?v=20260914-clientes-v4" in entry
+    assert "cliente-formulario.js?v=20260914-clientes-v4" in router
 
     for required in (
         "E-mail de acesso Google",
+        "ID do cliente",
+        "Nome / Razão social",
         "URL do feed XML/JSON",
+        "Formato do feed",
+        "Feed ativo",
         "CPF / CNPJ",
         "CEP",
         "Referência",
         "URL Foto do Corretor / Logomarca",
         "Celular administrativo",
         "WhatsApp administrativo",
+        "URL do site",
+        "Observações privadas",
     ):
         assert required in form
-    for legacy in ("ID / slug", "Descrição pública", "Tipo de imagem", "Limpar escolha"):
+    for legacy in ("ID / slug", "Descrição pública", "Tipo de imagem", "Limpar escolha", "Provider / CRM"):
         assert legacy not in form
 
     assert "readonly aria-readonly=\"true\"" in form
@@ -47,8 +53,14 @@ def test_built_client_form_contract(tmp_path):
     assert "if(id){value=await api" in form
     assert "email_login" in form and "auth/google" in worker
     assert "referencia" in worker
-    assert 'class="half">Status' in form
-    assert ".client-form{display:grid;row-gap:2rem}" in (output / "painel" / "painel.css").read_text()
+    css = (output / "painel" / "painel.css").read_text()
+    assert 'class="wide-input"' not in form
+    assert 'class="half"' not in form
+    assert 'class="private-notes">Observações privadas' in form
+    assert "repeat(2,minmax(0,1fr))" in css
+    assert ".form-grid .wide,.form-grid .private-notes{grid-column:1/-1}" in css
+    assert ".client-form .form-section+.form-section{margin-top:2rem}" in css
+    assert "@media(max-width:520px){.cards,.form-grid{grid-template-columns:1fr}" in css
     assert 'name="imagem_tipo"' not in form
     assert "id=\"image-preview\"" in form
     assert "feed_url" in worker and "private/clientes/${id}/feed.json" in worker
