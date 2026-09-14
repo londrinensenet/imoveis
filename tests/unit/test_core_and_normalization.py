@@ -66,7 +66,7 @@ class CoreAndNormalizationTests(unittest.TestCase):
     def test_servico_rejeita_campos_e_urls_perigosas(self):
         with tempfile.TemporaryDirectory() as directory, patch("src.clientes.service.client_path",lambda _:Path(directory)):
             with self.assertRaises(ValueError): save_client("cliente-abc",{"path":"../../x"})
-            for url in ("http://example.org/x","https://user:pass@example.org/x","https://example.org/x#frag","https://127.0.0.1/x"):
+            for url in ("https://user:pass@example.org/x","https://example.org/x#frag","https://127.0.0.1/x"):
                 with self.subTest(url=url), self.assertRaises(ValueError): save_feed("cliente-abc",url)
             self.assertTrue(save_feed("cliente-abc","https://feeds.example.org/x"))
 

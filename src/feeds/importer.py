@@ -14,9 +14,10 @@ def safe_feed_url(url: str) -> str:
     if not isinstance(url, str) or len(url) > 2048:
         raise ValueError("URL de feed inválida")
     parsed = urllib.parse.urlsplit(url)
-    if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
-        raise ValueError("Feed deve usar HTTPS")
-    for info in socket.getaddrinfo(parsed.hostname, 443, type=socket.SOCK_STREAM):
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
+        raise ValueError("URL de feed inválida")
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    for info in socket.getaddrinfo(parsed.hostname, port, type=socket.SOCK_STREAM):
         ip = ipaddress.ip_address(info[4][0])
         if not ip.is_global: raise ValueError("Destino de feed não permitido")
     return url

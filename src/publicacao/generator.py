@@ -13,7 +13,7 @@ from src.core.io import canonical_bytes
 
 CARD_FIELDS = ("id", "cliente_id", "titulo", "cidade", "bairro", "uf", "finalidade", "tipo", "preco", "preco_venda", "preco_aluguel", "area", "area_util", "area_terreno", "quartos", "suites", "banheiros", "vagas", "andar", "andares", "ano_construcao", "subtipo", "features")
 FULL_FIELDS = CARD_FIELDS + ("codigo", "descricao", "fotos", "location", "media", "features", "contact_info", "virtual_tour_link", "area_apresentacao")
-PUBLIC_CLIENT_FIELDS = ("id", "nome", "tipo", "creci", "cidade", "uf", "descricao", "logo")
+PUBLIC_CLIENT_FIELDS = ("id", "tipo", "creci", "nome_publico", "telefone_publico", "whatsapp", "email_publico", "site", "imagem_tipo", "imagem_url", "descricao_publica")
 TARGET = 1_000_000
 
 
@@ -89,7 +89,15 @@ def generate(properties: list[dict], clients: list[dict], output: Path) -> bool:
                 files.append(relative)
             manifests[name] = {"total": len(values), "partes": files}
         _write(stage / "indices" / "manifesto.json", manifests)
-        public_clients = [select(client, PUBLIC_CLIENT_FIELDS) for client in sorted(clients, key=lambda item: item["id"])]
+        public_clients = []
+        for source in sorted(clients, key=lambda item: item["id"]):
+            client = select(source, PUBLIC_CLIENT_FIELDS)
+            client["nome"] = client.pop("nome_publico", None) or source.get("nome", "")
+            if "descricao_publica" in client:
+                client["descricao"] = client.pop("descricao_publica")
+            if "imagem_url" in client:
+                client["logo"] = client.pop("imagem_url")
+            public_clients.append(client)
         for client in public_clients:
             if "logo" in client:
                 parsed = urllib.parse.urlsplit(str(client["logo"]))

@@ -3,7 +3,7 @@ import ipaddress
 from urllib.parse import urlsplit
 from src.core.io import atomic_write, canonical_bytes, client_path, load_json
 
-PRIVATE_FIELDS={"id","nome","tipo","creci","cidade","uf","descricao","logo","razao_social","documento","responsavel","email","telefone","observacoes","ativo"}
+PRIVATE_FIELDS={"id","cliente_id","nome","tipo","creci","status","ativo","razao_social","cpf_cnpj","responsavel","email_login","email_administrativo","telefone_administrativo","cep","uf","cidade","bairro","logradouro","numero","complemento","observacoes","nome_publico","telefone_publico","whatsapp","email_publico","site","imagem_tipo","imagem_url","descricao_publica","regioes"}
 def save_client(client_id: str, data: dict) -> bool:
     if set(data)-PRIVATE_FIELDS: raise ValueError("Campo de cliente não permitido")
     clean={key:value for key,value in data.items() if key in PRIVATE_FIELDS}; clean["id"]=client_id
@@ -11,7 +11,7 @@ def save_client(client_id: str, data: dict) -> bool:
 def save_feed(client_id: str, url: str, provider="generico", active=True) -> bool:
     if not isinstance(url,str) or len(url)>2048: raise ValueError("URL de feed inválida")
     parsed=urlsplit(url)
-    if parsed.scheme!="https" or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
         raise ValueError("URL de feed inválida")
     try: address=ipaddress.ip_address(parsed.hostname)
     except ValueError: address=None
