@@ -1,10 +1,5 @@
-# Controles de segurança
+# Modelo de ameaças
 
-- A fronteira publicável é exclusivamente `public/`; a validação rejeita nomes de campos privados e URLs de feed.
-- O importador aceita HTTPS, bloqueia destinos não globais, DTD e entidades, limita o download e sanitiza falhas.
-- Identificadores determinam caminhos internos; a API nunca recebe um caminho de arquivo.
-- Sessões têm assinatura, expiração e cookies `Secure`, `HttpOnly` e `SameSite=Strict`; autorização é conferida em cada operação.
-- Senhas usam derivação versionada com salt (scrypt no núcleo Python e PBKDF2-SHA-256 com 310 mil iterações no runtime Web Crypto).
-- Redefinições são temporárias, aleatórias e não revelam senhas escolhidas ao administrador.
-- Workflows começam com leitura mínima, exigem variables, confirmação e secret para operações reais e não publicam sem diferença.
+O navegador é não confiável: e-mail ou perfil enviados isoladamente nunca autenticam ninguém. O Worker verifica criptograficamente o ID token Google e só depois consulta autorização privada. Audience, issuer, expiração e e-mail verificado impedem tokens de outro aplicativo, emissor ou conta não confirmada.
 
+Sessões são assinadas, curtas e protegidas por cookie `Secure`, `HttpOnly` e `SameSite=Strict`. Origem, HTTPS, tipo e tamanho do corpo são validados. Tokens, URLs privadas e dados de `private/` não são registrados ou publicados. As limitações externas são disponibilidade das chaves públicas Google e da API GitHub; falhas resultam em negação de acesso, nunca em autorização permissiva.

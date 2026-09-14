@@ -1,3 +1,7 @@
 # Segurança
 
-Sessões são HMAC-SHA256, expiram, usam cookie `Secure; HttpOnly; SameSite=Strict`, CORS restrito e HTTPS. Senhas persistem exclusivamente como PBKDF2-SHA256 com sal aleatório e 310.000 iterações. O Worker limita payload, valida IDs, não oferece endpoint genérico de arquivos e não registra segredos. `scripts/build.py` parte de uma allowlist (`public/`) e `scripts/validate_public.py` bloqueia campos e padrões privados antes de gerar `dist/`.
+Google autentica a identidade; o Worker autoriza apenas e-mails privados ativos. A validação do ID token verifica criptograficamente assinatura RS256 com as chaves públicas Google, issuer, audience igual a `GOOGLE_CLIENT_ID`, expiração, `sub`, e-mail e `email_verified === true`. Dados soltos enviados pelo navegador nunca constituem identidade.
+
+Após autenticar, o Worker emite sessão própria HMAC-SHA256 com duração de uma hora. O cookie usa `Secure; HttpOnly; SameSite=Strict; Path=/`; ID token e tokens de sessão não são registrados. `POST /api/logout` expira a sessão. CORS/CSRF permanece limitado a `ADMIN_ORIGIN`, HTTPS é obrigatório e payloads têm limite de 16 KiB.
+
+Não há autenticação local, segredo de cliente Google, D1 ou KV. A integração GitHub deriva caminhos privados internamente. `scripts/build.py` publica apenas `public/`, e as validações impedem dados privados nos artefatos públicos.

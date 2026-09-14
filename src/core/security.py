@@ -1,44 +1,28 @@
-"""Primitivas de segurança sem dependências externas."""
-from __future__ import annotations
-import base64, hashlib, hmac, json, secrets, time
+"""Primitivas de sessão local; a identidade é validada pelo Worker com Google."""
+import base64
+import hashlib
+import hmac
+import json
+import time
 
-PARAMETERS = {"algorithm": "scrypt", "n": 16384, "r": 8, "p": 1, "dklen": 32, "version": 1}
 
-def hash_password(password: str) -> str:
-    if not isinstance(password, str) or len(password) < 12 or len(password) > 256:
-        raise ValueError("A senha deve ter entre 12 e 256 caracteres")
-    salt = secrets.token_bytes(16)
-    key = hashlib.scrypt(password.encode(), salt=salt, n=PARAMETERS["n"], r=PARAMETERS["r"], p=PARAMETERS["p"], dklen=PARAMETERS["dklen"])
-    return "scrypt$v=1$n=16384,r=8,p=1$%s$%s" % (base64.urlsafe_b64encode(salt).decode(), base64.urlsafe_b64encode(key).decode())
+def sign_session(payload: dict, secret: str) -> str:
+    data=base64.urlsafe_b64encode(json.dumps(payload,separators=(",",":"),sort_keys=True).encode()).rstrip(b"=").decode()
+    signature=hmac.new(secret.encode(),data.encode(),hashlib.sha256).digest()
+    return f"{data}.{base64.urlsafe_b64encode(signature).rstrip(b'=').decode()}"
 
-def verify_password(password: str, encoded: str) -> bool:
-    try:
-        algorithm, version, raw_params, salt64, key64 = encoded.split("$")
-        params = dict(item.split("=") for item in raw_params.split(","))
-        expected_params = {key: str(PARAMETERS[key]) for key in ("n", "r", "p")}
-        salt, expected = base64.urlsafe_b64decode(salt64), base64.urlsafe_b64decode(key64)
-        if (algorithm != "scrypt" or version != "v=1" or params != expected_params
-                or len(salt) != 16 or len(expected) != PARAMETERS["dklen"]):
-            return False
-        actual = hashlib.scrypt(password.encode(), salt=salt, n=PARAMETERS["n"],
-                                r=PARAMETERS["r"], p=PARAMETERS["p"], dklen=PARAMETERS["dklen"])
-        return hmac.compare_digest(actual, expected)
-    except (ValueError, KeyError, TypeError): return False
-
-def sign_session(subject: str, role: str, secret: str, ttl: int = 3600) -> str:
-    if role not in {"superadmin", "cliente"} or not subject: raise ValueError("Sessão inválida")
-    payload = base64.urlsafe_b64encode(json.dumps({"sub": subject, "role": role, "exp": int(time.time()) + ttl}, separators=(",", ":"), sort_keys=True).encode()).decode().rstrip("=")
-    signature = hmac.new(secret.encode(), payload.encode(), hashlib.sha256).hexdigest()
-    return payload + "." + signature
 
 def verify_session(token: str, secret: str) -> dict | None:
     try:
-        payload, signature = token.split(".", 1)
-        expected = hmac.new(secret.encode(), payload.encode(), hashlib.sha256).hexdigest()
-        if not hmac.compare_digest(signature, expected): return None
-        data = json.loads(base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4)))
-        return data if data["exp"] >= int(time.time()) and data["role"] in {"superadmin", "cliente"} else None
-    except (ValueError, KeyError, TypeError, json.JSONDecodeError): return None
+        data,signature=token.split(".")
+        expected=base64.urlsafe_b64encode(hmac.new(secret.encode(),data.encode(),hashlib.sha256).digest()).rstrip(b"=").decode()
+        if not hmac.compare_digest(signature,expected): return None
+        payload=json.loads(base64.urlsafe_b64decode(data+"="*(-len(data)%4)))
+        return payload if payload.get("exp",0)>time.time() else None
+    except (ValueError,TypeError,json.JSONDecodeError): return None
 
-def authorize(session: dict, role: str, client_id: str | None = None) -> bool:
-    return bool(session and (session["role"] == "superadmin" or (session["role"] == role == "cliente" and session["sub"] == client_id)))
+
+def authorize(session: dict | None, cliente_id: str | None=None, master_only: bool=False) -> bool:
+    if not session: return False
+    if master_only: return session.get("role")=="MASTER"
+    return session.get("role") in {"MASTER","ADMIN"} or session.get("role")=="CLIENTE" and session.get("cliente_id")==cliente_id

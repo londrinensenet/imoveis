@@ -1,5 +1,5 @@
 # Administradores
 
-O bootstrap cria logicamente `master` (MASTER protegido) e `admin` (ADMIN), ambos com troca obrigatória. Os valores iniciais são os definidos pelo responsável na implantação e entram somente como hashes em Secrets do Worker. No primeiro acesso, autentique-se, conclua a tela obrigatória de troca e repita para a segunda conta. A gravação em `private/admins/<id>.json` contém somente hash PBKDF2; a credencial bootstrap deixa de ser consultada. Remova os Secrets bootstrap após as duas trocas.
+O MASTER permanente é `londrinense.net@gmail.com` (`SUPERADMIN`, `MASTER`, ativo). O Worker o reconhece pelo e-mail verificado do Google e bloqueia exclusão, desativação, alteração do e-mail e rebaixamento.
 
-MASTER cria, edita, redefine senha, ativa, desativa e exclui ADMIN. Proteções no Worker impedem excluir/desativar `master` ou alterar seu perfil. ADMIN opera clientes e sincronizações, mas recebe 403 em gestão de administradores.
+Somente MASTER lista, cria, edita, ativa, desativa e exclui ADMINs. Cada `private/admins/<id>.json` contém exclusivamente autorização: `id`, `nome`, `email`, `role: "ADMIN"` e `ativo`. Não há credenciais locais, hashes, primeiro acesso ou redefinição. Um ADMIN ativo entra quando o e-mail verificado no ID token coincide, sem distinção de maiúsculas/minúsculas, com o e-mail cadastrado.

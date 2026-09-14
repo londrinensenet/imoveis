@@ -10,7 +10,7 @@
 | Último resultado válido e isolamento | Conforme | Testes confirmam download exclusivo do selecionado e reconstrução privada dos demais. |
 | Remoção e atomicidade | Conforme | Testes cobrem staging falho, preservação integral, remoção de sobras, limpeza do staging e árvore consistente. |
 | Site estático, responsivo e acessível | Pendente de teste | Implementado sem Worker/D1/KV para visitantes; ensaios visuais, responsivos e assistivos completos pertencem à FASE 4. |
-| Autenticação e autorização | Parcialmente conforme | PBKDF2, HMAC, cookie, expiração, origem e isolamento têm testes; não há revogação individual antecipada de sessão stateless. |
+| Autenticação e autorização | Parcialmente conforme | validação Google, HMAC, cookie, expiração, origem e isolamento têm testes; não há revogação individual antecipada de sessão stateless. |
 | Sincronização geral e individual | Conforme | Workflows, painel e regressões de isolamento estão presentes. |
 | Agenda no fuso IANA | Pendente de teste | Gate usa `ZoneInfo`; os cinco horários e execução real agendada serão exercitados na FASE 4. |
 | Commit e push | Conforme | Somente jobs `publicar` têm `contents: write`; SHA e saída da etapa vinculam o push ao commit corrente via `GITHUB_TOKEN`. |
@@ -25,7 +25,7 @@
 3. IDs duplicados/perigosos e cards individuais acima do limite não eram rejeitados. A geração falha antes da publicação.
 4. Redirecionamentos de feeds não eram revalidados, e o parser não reafirmava os limites de bytes e itens. Os limites passaram a valer em todas as entradas auditáveis.
 5. Logos com esquemas inseguros podiam chegar a atributos HTML. Somente referências HTTPS válidas são emitidas.
-6. O Worker não validava origem/CSRF, não oferecia CORS compatível com cookie, aceitava corpos sem limite e permitia custo PBKDF2 controlado pelo arquivo. Esses pontos foram fechados e o login recebeu limitação de tentativas por instância.
+6. O Worker passou a validar origem/CSRF, CORS com credenciais e limite de corpo. A migração posterior para Google acrescentou validação criptográfica e removeu credenciais locais.
 7. Faltava uma operação lógica para cadastro/edição de cliente. O endpoint autorizado agora aceita apenas campos conhecidos e deriva o caminho pelo ID validado.
 8. A agenda convertia manualmente para UTC. O workflow agora é acionado por hora e libera o processamento apenas às 09, 12, 15, 18 e 23 segundo `ZoneInfo("America/Sao_Paulo")`, inclusive diante de futura mudança civil do fuso.
 9. O workflow geral podia executar a etapa de push sem um commit criado naquela execução. Uma saída explícita condiciona o push à mudança confirmada.
