@@ -1,5 +1,8 @@
 name: Publicar GitHub Pages
-on: {workflow_dispatch: {}}
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
 permissions: {contents: read, pages: write, id-token: write}
 jobs:
   publicar:
@@ -9,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - run: python scripts/validate_public.py
+      - run: python scripts/build.py
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
-        with: {path: public}
+        with: {path: dist}
       - uses: actions/deploy-pages@d6db90192d1dadb1235c8db1685f8b57a2e66c29

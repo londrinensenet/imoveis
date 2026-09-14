@@ -24,7 +24,8 @@ class WorkflowAndExposureTests(unittest.TestCase):
                 self.assertIn("steps.commit.outputs.created == 'true'",text)
         pages=(ROOT/".github/workflows/pages.yml").read_text()
         self.assertIn("workflow_dispatch",pages); self.assertIn("ENABLE_REAL_PUBLISH",pages)
-        self.assertIn("with: {path: public}",pages); self.assertNotIn("private",pages)
+        self.assertIn("python scripts/build.py",pages)
+        self.assertIn("with: {path: dist}",pages); self.assertNotIn("private",pages)
 
     def test_actions_fixadas_em_hash(self):
         for path in (ROOT/".github/workflows").glob("*.yml"):
