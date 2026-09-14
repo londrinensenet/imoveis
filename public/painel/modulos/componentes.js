@@ -1,5 +1,7 @@
 const escape=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 export {escape};
+export function avatar(identity,className="avatar"){const name=identity.nome||"Usuário",initials=name.trim().split(/\s+/).slice(0,2).map(part=>part[0]).join("").toUpperCase()||"U",url=identity.foto_url||identity.picture||"";return `<span class="${className}" role="img" aria-label="Avatar de ${escape(name)}"><span>${escape(initials)}</span>${url?`<img src="${escape(url)}" alt="" referrerpolicy="no-referrer">`:""}</span>`}
+export function activateAvatars(root=document){root.querySelectorAll('.avatar img').forEach(image=>image.addEventListener('error',()=>image.remove(),{once:true}))}
 export function toast(message,type="sucesso"){const node=document.createElement("div");node.className=`toast ${type}`;node.textContent=message;document.querySelector("#toasts").append(node);setTimeout(()=>node.remove(),4500)}
 export function loading(){return '<div class="cards"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>'}
 export function empty(title,text,action=""){return `<div class="empty"><h2>${escape(title)}</h2><p class="muted">${escape(text)}</p>${action}</div>`}
