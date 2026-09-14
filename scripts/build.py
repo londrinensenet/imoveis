@@ -6,6 +6,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import scripts.validate_public  # valida ao importar
 ROOT=Path(__file__).resolve().parents[1]
 def build(output=ROOT/'dist'):
+    output=Path(output)
     shutil.rmtree(output,ignore_errors=True)
     shutil.copytree(ROOT/'public',output)
     forbidden={'private','.github','importadores','src','worker-admin'}
