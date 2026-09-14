@@ -129,6 +129,10 @@
       "type": "string",
       "maxLength": 120
     },
+    "referencia": {
+      "type": "string",
+      "maxLength": 180
+    },
     "observacoes": {
       "type": "string",
       "maxLength": 2000

@@ -3,7 +3,7 @@ import ipaddress
 from urllib.parse import urlsplit
 from src.core.io import atomic_write, canonical_bytes, client_path, load_json
 
-PRIVATE_FIELDS={"id","cliente_id","nome","tipo","creci","status","ativo","razao_social","cpf_cnpj","responsavel","email_login","email_administrativo","telefone_administrativo","cep","uf","cidade","bairro","logradouro","numero","complemento","observacoes","nome_publico","telefone_publico","whatsapp","email_publico","site","imagem_tipo","imagem_url","descricao_publica","regioes"}
+PRIVATE_FIELDS={"id","cliente_id","nome","tipo","creci","status","ativo","razao_social","cpf_cnpj","responsavel","email_login","email_administrativo","telefone_administrativo","cep","uf","cidade","bairro","logradouro","numero","complemento","referencia","observacoes","nome_publico","telefone_publico","whatsapp","email_publico","site","imagem_tipo","imagem_url","descricao_publica","regioes"}
 def save_client(client_id: str, data: dict) -> bool:
     if set(data)-PRIVATE_FIELDS: raise ValueError("Campo de cliente não permitido")
     clean={key:value for key,value in data.items() if key in PRIVATE_FIELDS}; clean["id"]=client_id
