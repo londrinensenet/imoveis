@@ -1,1 +1,180 @@
-{"$schema":"https://json-schema.org/draft/2020-12/schema","title":"Cliente privado","type":"object","required":["id","nome","tipo","ativo"],"properties":{"id":{"type":"string","pattern":"^[a-z0-9][a-z0-9-]{2,39}$"},"nome":{"type":"string","maxLength":160},"tipo":{"enum":["imobiliaria","corretor"]},"documento":{"type":"string","maxLength":30},"responsavel":{"type":"string","maxLength":160},"observacoes":{"type":"string","maxLength":2000},"ativo":{"type":"boolean"},"email_login":{"type":"string","format":"email","maxLength":254}},"additionalProperties":false}
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cliente privado",
+  "type": "object",
+  "required": [
+    "id",
+    "cliente_id",
+    "nome",
+    "tipo",
+    "ativo",
+    "email_login",
+    "cpf_cnpj",
+    "uf",
+    "cidade"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[0-9]{5}$"
+    },
+    "cliente_id": {
+      "type": "string",
+      "pattern": "^[0-9]{5}$"
+    },
+    "nome": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "tipo": {
+      "enum": [
+        "imobiliaria",
+        "corretor"
+      ]
+    },
+    "creci": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "status": {
+      "enum": [
+        "ativo",
+        "inativo",
+        "suspenso"
+      ]
+    },
+    "ativo": {
+      "type": "boolean"
+    },
+    "razao_social": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "cpf_cnpj": {
+      "type": "string",
+      "pattern": "^(?:[0-9]{11}|[0-9]{14})$"
+    },
+    "responsavel": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "email_login": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254
+    },
+    "email_administrativo": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254
+    },
+    "telefone_administrativo": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "cep": {
+      "type": "string",
+      "pattern": "^(?:[0-9]{8})?$"
+    },
+    "uf": {
+      "enum": [
+        "AC",
+        "AL",
+        "AP",
+        "AM",
+        "BA",
+        "CE",
+        "DF",
+        "ES",
+        "GO",
+        "MA",
+        "MT",
+        "MS",
+        "MG",
+        "PA",
+        "PB",
+        "PR",
+        "PE",
+        "PI",
+        "RJ",
+        "RN",
+        "RS",
+        "RO",
+        "RR",
+        "SC",
+        "SP",
+        "SE",
+        "TO"
+      ]
+    },
+    "cidade": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "bairro": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "logradouro": {
+      "type": "string",
+      "maxLength": 180
+    },
+    "numero": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "complemento": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "observacoes": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "nome_publico": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "telefone_publico": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "whatsapp": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "email_publico": {
+      "type": "string",
+      "format": "email",
+      "maxLength": 254
+    },
+    "site": {
+      "type": "string",
+      "format": "uri"
+    },
+    "imagem_tipo": {
+      "enum": [
+        "",
+        "logo",
+        "foto"
+      ]
+    },
+    "imagem_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "descricao_publica": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "regioes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,4 +1,4 @@
-import tempfile,unittest
+import json,tempfile,unittest
 from pathlib import Path
 from unittest.mock import patch
 from src.feeds.importer import parse
@@ -67,3 +67,14 @@ class AtomicSwapRegressionTests(unittest.TestCase):
     with self.assertRaises(OSError):generate([{**prop,"titulo":"novo"}],[{"id":"cliente-a","nome":"A"}],out)
    self.assertEqual(before,{str(p.relative_to(out)):p.read_bytes() for p in out.rglob("*") if p.is_file()})
    self.assertEqual([],list(Path(directory).glob(".dados-*")))
+
+
+def test_cliente_publico_expoe_somente_allowlist(tmp_path):
+    from src.publicacao.generator import generate
+    private = {"id":"00001","nome":"Nome privado","tipo":"corretor","creci":"PR-1","nome_publico":"Nome público","telefone_publico":"43999999999","whatsapp":"43988888888","email_publico":"publico@example.com","site":"https://example.com","imagem_tipo":"foto","imagem_url":"https://cdn.example/foto.jpg","descricao_publica":"Perfil","email_login":"login@example.com","cpf_cnpj":"52998224725","email_administrativo":"admin@example.com","telefone_administrativo":"secret","cep":"86000000","uf":"PR","cidade":"Londrina","logradouro":"Rua privada","observacoes":"privado","feed_url":"https://secret.example/feed.xml?token=x"}
+    generate([], [private], tmp_path / "dados")
+    published = json.loads((tmp_path / "dados/clientes/clientes.json").read_text())[0]
+    assert published["nome"] == "Nome público"
+    assert published["logo"] == "https://cdn.example/foto.jpg"
+    for forbidden in ("email_login","cpf_cnpj","email_administrativo","telefone_administrativo","cep","uf","cidade","logradouro","observacoes","feed_url"):
+        assert forbidden not in published

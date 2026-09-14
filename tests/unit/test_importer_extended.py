@@ -14,6 +14,7 @@ class ImporterExtendedTests(unittest.TestCase):
             with self.subTest(ip=ip), self.assertRaises(ValueError): safe_feed_url("https://feed.example/x")
         addresses.return_value=[(None,None,None,None,("8.8.8.8",443))]
         self.assertEqual(safe_feed_url("https://feed.example/x"),"https://feed.example/x")
+        self.assertEqual(safe_feed_url("http://feed.example/x"),"http://feed.example/x")
 
     @patch("src.feeds.importer.safe_feed_url", side_effect=lambda value:value)
     @patch("src.feeds.importer.urllib.request.build_opener")

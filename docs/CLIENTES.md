@@ -1,5 +1,9 @@
-# Clientes
+# Clientes e acesso
 
-O painel mantém dados privados, integração e dados públicos separadamente em `private/clientes/<id>/cliente.json`, `feed.json` e `sincronizacao.json`. CPF/CNPJ, URL de feed, responsável, e-mail de acesso e anotações nunca integram a allowlist pública. Operações de cadastro, edição, status, consulta e sincronização usam endpoints semânticos; o navegador não escolhe caminhos Git.
+Cada cliente reside privadamente em `private/clientes/<ID>/`. O ID tem cinco dígitos, é reservado por um contador privado monotônico e não pode ser informado ou alterado no painel. Exclusões não fazem o contador retroceder.
 
-Um cliente ativo pode ter `email_login` com a Conta Google autorizada. Depois da validação do ID token, o Worker atribui `role: CLIENTE` e o `cliente_id` correspondente; todas as rotas mantêm o isolamento nesse identificador. A consulta percorre somente a coleção privada de clientes e não impõe limite fixo de contas.
+O cadastro privado contém a Conta Google autorizada (`email_login`), CPF/CNPJ normalizado, contato administrativo, endereço e observações. O feed XML ou JSON permanece em `feed.json`; HTTP é admitido para origens legadas e HTTPS é o padrão recomendado. Imagens são apenas referências HTTPS externas, classificadas como `logo` ou `foto`; não há upload.
+
+Depois da validação do ID token Google, o Worker atribui `role: CLIENTE` e o `cliente_id` correspondente. Não existe autenticação local por senha.
+
+A publicação usa uma allowlist: nome e descrição públicos, CRECI, telefone público, WhatsApp, e-mail público, site, tipo e URL da imagem. E-mail de login, documento fiscal, feed, contato administrativo, endereço e observações nunca compõem o read model público.
