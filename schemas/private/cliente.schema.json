@@ -73,6 +73,14 @@
       "type": "string",
       "maxLength": 30
     },
+    "celular_administrativo": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "whatsapp_administrativo": {
+      "type": "string",
+      "maxLength": 30
+    },
     "cep": {
       "type": "string",
       "pattern": "^(?:[0-9]{8})?$"

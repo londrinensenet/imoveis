@@ -21,9 +21,9 @@ def test_built_client_form_contract(tmp_path):
     form = (output / "painel" / "modulos" / "cliente-formulario.js").read_text()
     worker = (ROOT / "src" / "admin" / "worker.js").read_text()
 
-    assert "painel.js?v=20260914-clientes-v2" in index
-    assert "router.js?v=20260914-clientes-v2" in entry
-    assert "cliente-formulario.js?v=20260914-clientes-v2" in router
+    assert "painel.js?v=20260914-clientes-v3" in index
+    assert "router.js?v=20260914-clientes-v3" in entry
+    assert "cliente-formulario.js?v=20260914-clientes-v3" in router
 
     for required in (
         "E-mail de acesso Google",
@@ -32,9 +32,11 @@ def test_built_client_form_contract(tmp_path):
         "CEP",
         "Referência",
         "URL Foto do Corretor / Logomarca",
+        "Celular administrativo",
+        "WhatsApp administrativo",
     ):
         assert required in form
-    for legacy in ("ID / slug", "Descrição pública"):
+    for legacy in ("ID / slug", "Descrição pública", "Tipo de imagem", "Limpar escolha"):
         assert legacy not in form
 
     assert "readonly aria-readonly=\"true\"" in form
@@ -45,6 +47,10 @@ def test_built_client_form_contract(tmp_path):
     assert "if(id){value=await api" in form
     assert "email_login" in form and "auth/google" in worker
     assert "referencia" in worker
+    assert 'class="half">Status' in form
+    assert ".client-form{display:grid;row-gap:2rem}" in (output / "painel" / "painel.css").read_text()
+    assert 'name="imagem_tipo"' not in form
+    assert "id=\"image-preview\"" in form
     assert "feed_url" in worker and "private/clientes/${id}/feed.json" in worker
     assert "descricao_publica:data.descricao_publica??current.data.descricao_publica" in worker
 
