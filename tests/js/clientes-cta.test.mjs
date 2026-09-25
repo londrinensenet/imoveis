@@ -4,10 +4,10 @@ import fs from 'node:fs';
 import {canCreateClient,newClientLink,NOVO_CLIENTE_ROUTE} from '../../public/painel/modulos/clientes-lista.js';
 
 const sessions={
- MASTER:{papel:'MASTER',direitos:{incluir:true}},
- SUPERADMIN:{papel:'SUPERADMIN',direitos:{incluir:true}},
- ADMIN_ALLOWED:{papel:'ADMIN',permissoes:{incluir:true},direitos:{incluir:true}},
- ADMIN_DENIED:{papel:'ADMIN',permissoes:{incluir:false},direitos:{incluir:false}},
+ MASTER:{papel:'MASTER',direitos:{incluir:false}},
+ SUPERADMIN:{papel:'SUPERADMIN',direitos:{incluir:false}},
+ ADMIN_ALLOWED:{papel:'ADMIN',permissoes:{incluir:true},direitos:{incluir:false}},
+ ADMIN_DENIED:{papel:'ADMIN',permissoes:{incluir:false},direitos:{incluir:true}},
 };
 
 test('CTA de clientes respeita o direito de inclusão de cada perfil',()=>{
@@ -33,7 +33,7 @@ test('lista, roteador e formulário compõem um único fluxo de cadastro',()=>{
  const router=fs.readFileSync('public/painel/modulos/router.js','utf8');
  const form=fs.readFileSync('public/painel/modulos/cliente-formulario.js','utf8');
  assert.match(list,/empty\("Nenhum cliente","Cadastre o primeiro cliente ou altere os filtros\.",emptyAction\)/);
- assert.match(router,/parts\[0\]==="clientes"&&parts\[1\]==="novo"&&session\.direitos\?\.incluir/);
+ assert.match(router,/parts\[0\]==="clientes"&&parts\[1\]==="novo"&&canCreateClient\(session\)/);
  assert.match(router,/await formCliente\(root\)/);
  assert.equal((router.match(/from "\.\/cliente-formulario\.js/g)||[]).length,1);
  assert.equal(fs.readdirSync('public/painel/modulos').filter(name=>name==='cliente-formulario.js').length,1);
