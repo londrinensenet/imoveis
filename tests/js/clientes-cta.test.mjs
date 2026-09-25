@@ -10,6 +10,7 @@ const sessions={
  SUPERADMIN:{papel:'SUPERADMIN',direitos:{incluir:false}},
  ADMIN_ALLOWED:{papel:'ADMIN',permissoes:{incluir:false},direitos:{incluir:true}},
  ADMIN_DENIED:{papel:'ADMIN',permissoes:{incluir:true},direitos:{incluir:false}},
+ CLIENTE:{papel:'CLIENTE',direitos:{incluir:true}},
 };
 
 test('CTA de clientes respeita o direito de inclusão de cada perfil',()=>{
@@ -17,6 +18,7 @@ test('CTA de clientes respeita o direito de inclusão de cada perfil',()=>{
  assert.equal(canCreateClient(sessions.SUPERADMIN),true);
  assert.equal(canCreateClient(sessions.ADMIN_ALLOWED),true);
  assert.equal(canCreateClient(sessions.ADMIN_DENIED),false);
+ assert.equal(canCreateClient(sessions.CLIENTE),false);
 });
 
 test('API → setSession → getSession → clientes renderiza os dois CTAs do MASTER',async()=>{
@@ -36,12 +38,19 @@ test('API → setSession → getSession → clientes renderiza os dois CTAs do M
   assert.equal(String(url),'/api/clientes?');
   return Response.json({itens:[],total:0});
  };
- const fields={status:{value:''},feed:{value:''},filters:{onsubmit:null}};
- const root={html:'',set innerHTML(value){this.html=value},get innerHTML(){return this.html},querySelector(selector){return selector==='[name="status"]'?fields.status:selector==='[name="feed"]'?fields.feed:fields.filters}};
+ const fields={status:{value:''},feed:{value:''},filters:{onsubmit:null},list:{innerHTML:''},count:{textContent:''}};
+ const root={html:'',set innerHTML(value){this.html=value},get innerHTML(){return this.html},querySelector(selector){return selector==='[name="status"]'?fields.status:selector==='[name="feed"]'?fields.feed:selector==='#client-list'?fields.list:selector==='#client-count'?fields.count:fields.filters}};
  await clientes(root);
  assert.match(root.innerHTML,/>Novo cliente</);
- assert.match(root.innerHTML,/>Cadastrar primeiro cliente</);
- assert.equal((root.innerHTML.match(/href="#\/clientes\/novo"/g)||[]).length,2);
+ assert.match(fields.list.innerHTML,/>Cadastrar primeiro cliente</);
+ assert.equal((`${root.innerHTML}${fields.list.innerHTML}`.match(/href="#\/clientes\/novo"/g)||[]).length,2);
+});
+
+test('falha 502 permanece restrita à listagem e preserva cabeçalho e CTA',async()=>{
+ setSession(sessions.MASTER);globalThis.fetch=async()=>Response.json({erro:'Credencial do GitHub rejeitada.',codigo:'AUTENTICACAO'},{status:502});
+ const fields={status:{value:''},feed:{value:''},filters:{onsubmit:null},list:{innerHTML:''},count:{textContent:''},retry:{onclick:null}};
+ const root={html:'',set innerHTML(value){this.html=value},get innerHTML(){return this.html},querySelector(selector){return selector==='[name="status"]'?fields.status:selector==='[name="feed"]'?fields.feed:selector==='#client-list'?fields.list:selector==='#client-count'?fields.count:selector==='#retry-clients'?fields.retry:fields.filters}};
+ await clientes(root);assert.match(root.innerHTML,/<h1>Clientes<\/h1>/);assert.match(root.innerHTML,/>Novo cliente</);assert.match(fields.list.innerHTML,/Não foi possível carregar/);assert.match(fields.list.innerHTML,/Credencial do GitHub rejeitada/);assert.match(fields.list.innerHTML,/Tentar novamente/);assert.match(fields.list.innerHTML,/Executar diagnóstico/);assert.equal(typeof fields.retry.onclick,'function');
 });
 
 test('CTAs principal e vazio compartilham a rota do formulário existente',()=>{
