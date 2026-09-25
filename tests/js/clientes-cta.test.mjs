@@ -1,11 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {canCreateClient,newClientLink,NOVO_CLIENTE_ROUTE} from '../../public/painel/modulos/clientes-lista.js';
+import {canCreateClient,clientes,newClientLink,NOVO_CLIENTE_ROUTE} from '../../public/painel/modulos/clientes-lista.js';
+import {getSession,setSession} from '../../public/painel/modulos/router.js';
+import {testables} from '../../src/admin/worker.js';
 
 const sessions={
- MASTER:{papel:'MASTER',direitos:{incluir:true}},
- SUPERADMIN:{papel:'SUPERADMIN',direitos:{incluir:true}},
+ MASTER:{papel:'MASTER',direitos:{incluir:false}},
+ SUPERADMIN:{papel:'SUPERADMIN',direitos:{incluir:false}},
  ADMIN_ALLOWED:{papel:'ADMIN',permissoes:{incluir:false},direitos:{incluir:true}},
  ADMIN_DENIED:{papel:'ADMIN',permissoes:{incluir:true},direitos:{incluir:false}},
 };
@@ -15,6 +17,31 @@ test('CTA de clientes respeita o direito de inclusão de cada perfil',()=>{
  assert.equal(canCreateClient(sessions.SUPERADMIN),true);
  assert.equal(canCreateClient(sessions.ADMIN_ALLOWED),true);
  assert.equal(canCreateClient(sessions.ADMIN_DENIED),false);
+});
+
+test('API → setSession → getSession → clientes renderiza os dois CTAs do MASTER',async()=>{
+ if(!globalThis.crypto)globalThis.crypto=(await import('node:crypto')).webcrypto;
+ if(!globalThis.btoa)globalThis.btoa=value=>Buffer.from(value,'binary').toString('base64');
+ if(!globalThis.atob)globalThis.atob=value=>Buffer.from(value,'base64').toString('binary');
+ const environment={SESSION_SECRET:'s'.repeat(48),ADMIN_ORIGIN:'https://imoveis.londrinense.net',GITHUB_OWNER:'o',GITHUB_REPO:'r',GITHUB_BRANCH:'main',GITHUB_ADMIN_TOKEN:'x'};
+ globalThis.fetch=async url=>String(url).includes('/contents/private/admins?')||String(url).includes('/contents/private/clientes?')?Response.json([]):Response.json({message:'not found'},{status:404});
+ const signed=await testables.session({sub:'google-subject',email:'londrinense.net@gmail.com',role:'MASTER',nome:'SUPERADMIN'},environment.SESSION_SECRET);
+ const response=await testables.handle(new Request('https://api.example/api/sessao',{headers:{origin:environment.ADMIN_ORIGIN,cookie:`session=${signed}`}}),environment);
+ const apiSession=await response.json();
+ assert.deepEqual(apiSession,{usuario:'MASTER',nome:'SUPERADMIN',email:'londrinense.net@gmail.com',picture:'',foto_url:'',papel:'MASTER',permissoes:{incluir:true,editar:true,excluir:true},direitos:{incluir:true,editar:true,excluir:true,administradores:true}});
+
+ setSession(apiSession);
+ assert.strictEqual(getSession(),apiSession);
+ globalThis.fetch=async url=>{
+  assert.equal(String(url),'/api/clientes?');
+  return Response.json({itens:[],total:0});
+ };
+ const fields={status:{value:''},feed:{value:''},filters:{onsubmit:null}};
+ const root={html:'',set innerHTML(value){this.html=value},get innerHTML(){return this.html},querySelector(selector){return selector==='[name="status"]'?fields.status:selector==='[name="feed"]'?fields.feed:fields.filters}};
+ await clientes(root);
+ assert.match(root.innerHTML,/>Novo cliente</);
+ assert.match(root.innerHTML,/>Cadastrar primeiro cliente</);
+ assert.equal((root.innerHTML.match(/href="#\/clientes\/novo"/g)||[]).length,2);
 });
 
 test('CTAs principal e vazio compartilham a rota do formulário existente',()=>{
