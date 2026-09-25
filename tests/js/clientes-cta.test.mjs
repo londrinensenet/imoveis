@@ -33,7 +33,7 @@ test('lista, roteador e formulário compõem um único fluxo de cadastro',()=>{
  const router=fs.readFileSync('public/painel/modulos/router.js','utf8');
  const form=fs.readFileSync('public/painel/modulos/cliente-formulario.js','utf8');
  assert.match(list,/empty\("Nenhum cliente","Cadastre o primeiro cliente ou altere os filtros\.",emptyAction\)/);
- assert.match(router,/parts\[0\]==="clientes"&&parts\[1\]==="novo"&&session\.direitos\?\.incluir/);
+ assert.match(router,/parts\[0\]==="clientes"&&parts\[1\]==="novo"&&canCreateClient\(session\)/);
  assert.match(router,/await formCliente\(root\)/);
  assert.equal((router.match(/from "\.\/cliente-formulario\.js/g)||[]).length,1);
  assert.equal(fs.readdirSync('public/painel/modulos').filter(name=>name==='cliente-formulario.js').length,1);
