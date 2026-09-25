@@ -5,7 +5,7 @@ import {escape,empty,loading,toast,confirmAction} from "./componentes.js";
 export const NOVO_CLIENTE_ROUTE="#/clientes/novo";
 const addClientIcon='<svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8 M19 8v6 M22 11h-6"/></svg>';
 
-export const canCreateClient=session=>session?.papel==='MASTER'||session?.papel==='SUPERADMIN'||session?.papel==='ADMIN'&&session?.permissoes?.incluir===true;
+export const canCreateClient=session=>session?.direitos?.incluir===true;
 export const newClientLink=label=>`<a class="button" href="${NOVO_CLIENTE_ROUTE}">${addClientIcon}<span>${label}</span></a>`;
 
 export async function clientes(root,query=new URLSearchParams()){
