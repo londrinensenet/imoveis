@@ -21,7 +21,7 @@ def test_built_google_login_has_one_real_gis_flow(tmp_path):
 
     assert index.count('src="https://accounts.google.com/gsi/client"') == 1
     assert index.count('id="google-signin"') == 1
-    assert "painel.js?v=20260914-clientes-cta" in index
+    assert "painel.js?v=20260925-clientes-cta-v2" in index
     assert "google.js?v=20260914-gis-restore" in entry
     assert len(re.findall(r"\.initialize\(", published)) == 1
     assert len(re.findall(r"\.renderButton\(", published)) == 1
