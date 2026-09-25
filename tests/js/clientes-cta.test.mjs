@@ -4,10 +4,10 @@ import fs from 'node:fs';
 import {canCreateClient,newClientLink,NOVO_CLIENTE_ROUTE} from '../../public/painel/modulos/clientes-lista.js';
 
 const sessions={
- MASTER:{papel:'MASTER',direitos:{incluir:false}},
- SUPERADMIN:{papel:'SUPERADMIN',direitos:{incluir:false}},
- ADMIN_ALLOWED:{papel:'ADMIN',permissoes:{incluir:true},direitos:{incluir:false}},
- ADMIN_DENIED:{papel:'ADMIN',permissoes:{incluir:false},direitos:{incluir:true}},
+ MASTER:{papel:'MASTER',direitos:{incluir:true}},
+ SUPERADMIN:{papel:'SUPERADMIN',direitos:{incluir:true}},
+ ADMIN_ALLOWED:{papel:'ADMIN',permissoes:{incluir:false},direitos:{incluir:true}},
+ ADMIN_DENIED:{papel:'ADMIN',permissoes:{incluir:true},direitos:{incluir:false}},
 };
 
 test('CTA de clientes respeita o direito de inclusão de cada perfil',()=>{
