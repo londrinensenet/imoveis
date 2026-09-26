@@ -15,4 +15,4 @@ jobs:
       - run: python scripts/build.py
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
         with: {path: dist}
-      - uses: actions/deploy-pages@d6db90192d1dadb1235c8db1685f8b57a2e66c29
+      - uses: actions/deploy-pages@v4
