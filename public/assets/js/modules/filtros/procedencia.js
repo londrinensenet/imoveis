@@ -1,1 +1,1 @@
-export{DEFINICOES as PROCEDENCIA}from"./definicoes.js?v=20260926-3";
+export{DEFINICOES as PROCEDENCIA}from"./definicoes.js?v=20260926-4";
