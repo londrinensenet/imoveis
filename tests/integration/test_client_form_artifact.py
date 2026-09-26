@@ -21,8 +21,8 @@ def test_built_client_form_contract(tmp_path):
     form = (output / "painel" / "modulos" / "cliente-formulario.js").read_text()
     worker = (ROOT / "src" / "admin" / "worker.js").read_text()
 
-    assert "painel.js?v=20260926-github-integration-v2" in index
-    assert "router.js?v=20260926-github-integration-v2" in entry
+    assert "painel.js?v=20260926-github-integration-v3" in index
+    assert "router.js?v=20260926-github-integration-v3" in entry
     assert "cliente-formulario.js?v=20260914-admin-v1" in router
 
     for required in (
