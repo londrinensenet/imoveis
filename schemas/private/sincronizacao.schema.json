@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Estado privado da última sincronização",
+  "type": "object",
+  "required": ["cliente_id", "estado", "horario", "quantidade"],
+  "properties": {
+    "cliente_id": {"type": "string", "pattern": "^[0-9]{5}$"},
+    "estado": {"enum": ["sucesso", "falha", "erro", "em_execucao"]},
+    "horario": {"type": "string", "format": "date-time"},
+    "quantidade": {"type": "integer", "minimum": 0},
+    "resultado": {"type": "string", "maxLength": 80},
+    "processados": {"type": "integer", "minimum": 0},
+    "importados": {"type": "integer", "minimum": 0},
+    "rejeitados": {"type": "integer", "minimum": 0},
+    "erro": {"type": "string", "maxLength": 200}
+  },
+  "additionalProperties": false
+}
