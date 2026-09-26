@@ -24,7 +24,7 @@ class PublicSiteStaticTests(unittest.TestCase):
         index=(ROOT/"index.html").read_text()
         self.assertGreaterEqual(index.count("<label>"),4);self.assertIn('role="search"',index)
         self.assertIn('role="status"',index);self.assertIn('class="skip"',index)
-        self.assertIn('aria-label="Principal"',index)
+        self.assertIn('aria-label="Navegação principal"',(ROOT/'componentes/header.html').read_text())
 
     def test_estados_vazio_rede_e_imagem_ausente(self):
         scripts="\n".join(path.read_text() for path in (ROOT/"assets/js").glob("*.js"))

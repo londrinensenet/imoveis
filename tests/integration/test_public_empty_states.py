@@ -8,18 +8,20 @@ PUBLIC = ROOT / "public"
 class PublicEmptyStateRegressionTests(unittest.TestCase):
     def test_paginas_inicial_e_resultados_tratam_zero_imoveis(self):
         site = (PUBLIC / "assets/js/site.js").read_text()
+        compact_site = re.sub(r"\s+", "", site)
         resultados = (PUBLIC / "assets/js/resultados.js").read_text()
         self.assertIn("Nenhum imóvel disponível no momento.", site)
-        self.assertIn("criarFiltros(filtros,[]", site)
+        self.assertIn("criarFiltros(filtros,[]", compact_site)
         self.assertIn('resumo.textContent="0 imóveis encontrados"', resultados)
         self.assertIn("criarFiltros(filtros,[]", resultados)
 
     def test_inicializacao_e_independente_e_elementos_sao_verificados(self):
         site = (PUBLIC / "assets/js/site.js").read_text()
+        compact_site = re.sub(r"\s+", "", site)
         resultados = (PUBLIC / "assets/js/resultados.js").read_text()
-        self.assertIn("if(filtros)", site)
-        self.assertIn("if(categorias)", site)
-        self.assertIn("if(regioes)", site)
+        self.assertIn("if(filtros)", compact_site)
+        self.assertIn("if(categorias)", compact_site)
+        self.assertIn("if(regioes)", compact_site)
         self.assertIn("if(filtros&&listagem)", resultados)
         self.assertNotIn('src="assets/js/site.js?', (PUBLIC / "resultados.html").read_text())
         self.assertNotIn('src="assets/js/resultados.js?', (PUBLIC / "index.html").read_text())

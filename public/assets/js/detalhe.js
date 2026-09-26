@@ -1,10 +1,287 @@
-import{fetchJSON,loadCards,el,fallback,money,precoDo,urlPublica}from"./common.js?v=20260903-1";import{criarCard}from"./modules/listagem.js?v=20260903-1";
+import {
+  fetchJSON,
+  loadCards,
+  el,
+  fallback,
+  money,
+  precoDo,
+  urlPublica,
+} from "./common.js?v=20260903-1";
+import { criarCard } from "./modules/listagem.js?v=20260903-1";
 // Dados descritivos são inseridos por textContent; substitui o antigo escape(x.descricao).
-const root=document.querySelector("#detalhe"),params=new URLSearchParams(location.search),id=params.get("id"),retorno=params.get("retorno"),voltar=document.querySelector("#voltar-resultados");
-if(retorno){try{const u=new URL(retorno,location.href);if(u.origin===location.origin)voltar.href=u.href}catch{/* mantém fallback seguro */}}
-const secao=(titulo)=>{const s=el("section","detalhe-secao");s.append(el("h2",null,titulo));return s};
-const linkContato=(label,href)=>{const a=el("a","botao",label);a.href=href;return a};
-if(!/^[a-z0-9-]{3,120}$/.test(id||"")){root.replaceChildren(el("section","estado estado-erro","Imóvel não encontrado"))}else try{const item=await fetchJSON(`dados/imoveis/${encodeURIComponent(id)}.json`);document.title=`${item.titulo} | Portal Londrinense`;root.replaceChildren();const galeria=el("section","galeria");galeria.setAttribute("aria-label","Galeria do imóvel");const fotos=(item.fotos||[]).map(urlPublica).filter(Boolean);for(const[index,url]of(fotos.length?fotos.slice(0,5).entries():[[0,fallback]]){const img=el("img");img.src=url;img.width=900;img.height=675;img.alt=fotos.length?(index?`Foto ${index+1} de ${item.titulo}`:`Foto principal de ${item.titulo}`):"Imóvel sem foto";img.addEventListener("error",()=>{img.src=fallback;img.alt="Imagem indisponível"},{once:true});galeria.append(img)}root.append(galeria);const layout=el("div","duas-colunas"),conteudo=el("div"),aside=el("aside","lateral-sticky contato-card painel");const topo=el("header","imovel-topo"),head=el("div");head.append(el("p","card-tipo",`${item.finalidade} · ${item.subtipo||item.tipo}`),el("h1",null,item.titulo),el("p","localizacao",[item.bairro,item.location?.zone,item.cidade,item.uf].filter(Boolean).join(" · ")));topo.append(head,el("p","preco imovel-preco",money(precoDo(item))));conteudo.append(topo);const metrics=el("section","detalhe-secao metricas");for(const[value,label]of[[item.quartos,"quartos"],[item.suites,"suítes"],[item.banheiros,"banheiros"],[item.vagas,"vagas"],[item.area_util||item.area,"m²"]])if(Number(value)>0)metrics.append(el("span","metrica",`${value} ${label}`));conteudo.append(metrics);if(item.descricao){const s=secao("Descrição");s.append(el("p",null,item.descricao));conteudo.append(s)}if(item.features?.length){const s=secao("Comodidades"),ul=el("ul","lista-comodidades");item.features.forEach(value=>ul.append(el("li",null,`✓ ${value}`)));s.append(ul);conteudo.append(s)}const videos=(item.media||[]).filter(m=>m.type==="video").map(m=>urlPublica(m.url)).filter(Boolean);if(videos.length){const s=secao("Vídeo");videos.forEach((url,index)=>{const a=el("a","botao botao-secundario",`Abrir vídeo ${index+1}`);a.href=url;a.target="_blank";a.rel="noopener noreferrer";s.append(a)});conteudo.append(s)}const tour=urlPublica(item.virtual_tour_link);if(tour){const s=secao("Tour virtual"),a=el("a","botao botao-secundario","Abrir tour virtual");a.href=tour;a.target="_blank";a.rel="noopener noreferrer";s.append(a);conteudo.append(s)}if(item.location?.latitude&&item.location?.longitude){const s=secao("Localização");s.append(el("p",null,"Localização aproximada informada pelo anunciante."));const a=el("a","botao botao-secundario","Abrir mapa");a.href=`https://www.openstreetmap.org/?mlat=${encodeURIComponent(item.location.latitude)}&mlon=${encodeURIComponent(item.location.longitude)}`;a.target="_blank";a.rel="noopener noreferrer";s.append(a);conteudo.append(s)}if(item.finalidade==="venda"&&precoDo(item)>0){const s=secao("Simulação de financiamento"),form=el("form","painel");const label=el("label",null,"Valor de entrada"),input=el("input");input.type="number";input.min="0";input.required=true;label.append(input);const output=el("p");output.setAttribute("role","status");const button=el("button","botao","Calcular saldo estimado");button.type="submit";form.append(label,button,output);form.addEventListener("submit",event=>{event.preventDefault();if(!input.checkValidity()){output.textContent="Informe um valor de entrada válido.";return}output.textContent=`Saldo antes de juros e taxas: ${money(Math.max(0,precoDo(item)-Number(input.value)))}`});s.append(form);conteudo.append(s)}
- aside.append(el("h2",null,"Fale com o anunciante"));const contact=item.contact_info||{};if(contact.name)aside.append(el("p",null,contact.name));const phone=contact.phone?String(contact.phone).replace(/[^+\d]/g,""):"";if(phone)aside.append(linkContato("Ligar",`tel:${phone}`));if(contact.email)aside.append(linkContato("Enviar e-mail",`mailto:${contact.email}`));if(!phone&&!contact.email)aside.append(el("p",null,"Canais de contato indisponíveis."));const anunciante=el("a","botao botao-secundario","Ver anunciante");anunciante.href=`cliente.html?id=${encodeURIComponent(item.cliente_id)}`;aside.append(anunciante);layout.append(conteudo,aside);root.append(layout);
- const barra=document.querySelector("#barra-contato");if(phone||contact.email){if(phone)barra.append(linkContato("Ligar",`tel:${phone}`));if(contact.email)barra.append(linkContato("Contato",`mailto:${contact.email}`));barra.hidden=false;document.body.classList.add("tem-barra-contato")}
- try{const cards=await loadCards(),similares=cards.filter(x=>x.id!==item.id&&x.tipo===item.tipo&&x.cidade===item.cidade).slice(0,3);if(similares.length){const s=secao("Imóveis similares"),grid=el("div","cards");similares.forEach(x=>grid.append(criarCard(x)));s.append(grid);root.append(s)}const ids=JSON.parse(sessionStorage.getItem("imoveis:resultado")||"[]"),pos=ids.indexOf(item.id);if(pos>=0){const nav=el("nav","navegacao-imovel");nav.setAttribute("aria-label","Imóvel anterior e próximo");for(const[target,label]of[[ids[pos-1],"← Imóvel anterior"],[ids[pos+1],"Próximo imóvel →"]])if(target){const a=el("a",null,label);a.href=`imovel.html?id=${encodeURIComponent(target)}&retorno=${encodeURIComponent(retorno||"resultados.html")}`;nav.append(a)}root.append(nav)}}catch{/* módulo opcional indisponível não interrompe o detalhe */}}catch(error){root.replaceChildren();const state=el("section","estado estado-erro");state.append(el("h1",null,"Imóvel indisponível"),el("p",null,error.message==="json"?"Os dados deste imóvel são inválidos.":"Este imóvel foi removido ou não pôde ser carregado."));root.append(state)}
+const root = document.querySelector("#detalhe"),
+  params = new URLSearchParams(location.search),
+  id = params.get("id"),
+  retorno = params.get("retorno"),
+  voltar = document.querySelector("#voltar-resultados");
+if (retorno) {
+  try {
+    const u = new URL(retorno, location.href);
+    if (u.origin === location.origin) voltar.href = u.href;
+  } catch (error) {
+    /* mantém fallback seguro */
+  }
+}
+const secao = (titulo) => {
+  const s = el("section", "detalhe-secao");
+  s.append(el("h2", null, titulo));
+  return s;
+};
+const linkContato = (label, href) => {
+  const a = el("a", "botao", label);
+  a.href = href;
+  return a;
+};
+if (!/^[a-z0-9-]{3,120}$/.test(id || "")) {
+  root.replaceChildren(
+    el("section", "estado estado-erro", "Imóvel não encontrado"),
+  );
+} else
+  try {
+    const item = await fetchJSON(
+      `dados/imoveis/${encodeURIComponent(id)}.json`,
+    );
+    let cliente = null;
+    try {
+      const clientes = await fetchJSON("dados/clientes/clientes.json");
+      cliente = clientes.find((x) => x.id === item.cliente_id) || null;
+    } catch (error) {}
+    document.title = `${item.titulo} | Portal Londrinense`;
+    root.replaceChildren();
+    const galeria = el("section", "galeria");
+    galeria.setAttribute("aria-label", "Galeria do imóvel");
+    const fotos = (item.fotos || []).map(urlPublica).filter(Boolean);
+    for (const [index, url] of fotos.length
+      ? fotos.slice(0, 5).entries()
+      : [[0, fallback]]) {
+      const img = el("img");
+      img.src = url;
+      img.width = 900;
+      img.height = 675;
+      img.alt = fotos.length
+        ? index
+          ? `Foto ${index + 1} de ${item.titulo}`
+          : `Foto principal de ${item.titulo}`
+        : "Imóvel sem foto";
+      img.addEventListener(
+        "error",
+        () => {
+          img.src = fallback;
+          img.alt = "Imagem indisponível";
+        },
+        { once: true },
+      );
+      galeria.append(img);
+    }
+    if (fotos.length > 1) {
+      const verFotos = el(
+        "button",
+        "botao galeria-todas",
+        `Ver todas as fotos (${fotos.length})`,
+      );
+      verFotos.type = "button";
+      verFotos.addEventListener("click", () => {
+        galeria.classList.toggle("galeria-aberta");
+        verFotos.textContent = galeria.classList.contains("galeria-aberta")
+          ? "Fechar galeria"
+          : `Ver todas as fotos (${fotos.length})`;
+      });
+      galeria.append(verFotos);
+    }
+    root.append(galeria);
+    const layout = el("div", "duas-colunas"),
+      conteudo = el("div"),
+      aside = el("aside", "lateral-sticky contato-card painel");
+    const topo = el("header", "imovel-topo"),
+      head = el("div");
+    head.append(
+      el("p", "card-tipo", `${item.finalidade} · ${item.subtipo || item.tipo}`),
+      el("h1", null, item.titulo),
+      el(
+        "p",
+        "localizacao",
+        [item.bairro, item.location?.zone, item.cidade, item.uf]
+          .filter(Boolean)
+          .join(" · "),
+      ),
+    );
+    topo.append(head, el("p", "preco imovel-preco", money(precoDo(item))));
+    conteudo.append(topo);
+    const metrics = el("section", "detalhe-secao metricas");
+    for (const [value, label] of [
+      [item.quartos, "quartos"],
+      [item.suites, "suítes"],
+      [item.banheiros, "banheiros"],
+      [item.vagas, "vagas"],
+      [item.area_util || item.area, "m²"],
+    ])
+      if (Number(value) > 0)
+        metrics.append(el("span", "metrica", `${value} ${label}`));
+    conteudo.append(metrics);
+    if (item.descricao) {
+      const s = secao("Descrição");
+      String(item.descricao)
+        .split(/\n+/)
+        .filter(Boolean)
+        .forEach((paragrafo) => s.append(el("p", null, paragrafo)));
+      conteudo.append(s);
+    }
+    if (item.features?.length) {
+      const s = secao("Comodidades"),
+        ul = el("ul", "lista-comodidades");
+      item.features.forEach((value) => ul.append(el("li", null, value)));
+      s.append(ul);
+      conteudo.append(s);
+    }
+    const videos = (item.media || [])
+      .filter((m) => m.type === "video")
+      .map((m) => urlPublica(m.url))
+      .filter(Boolean);
+    if (videos.length) {
+      const s = secao("Vídeo");
+      videos.forEach((url, index) => {
+        const a = el("a", "botao botao-secundario", `Abrir vídeo ${index + 1}`);
+        a.href = url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        s.append(a);
+      });
+      conteudo.append(s);
+    }
+    const tour = urlPublica(item.virtual_tour_link);
+    if (tour) {
+      const s = secao("Tour virtual"),
+        a = el("a", "botao botao-secundario", "Abrir tour virtual");
+      a.href = tour;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      s.append(a);
+      conteudo.append(s);
+    }
+    if (item.location?.latitude && item.location?.longitude) {
+      const s = secao("Localização");
+      s.append(
+        el("p", null, "Localização aproximada informada pelo anunciante."),
+      );
+      const a = el("a", "botao botao-secundario", "Abrir mapa");
+      a.href = `https://www.openstreetmap.org/?mlat=${encodeURIComponent(item.location.latitude)}&mlon=${encodeURIComponent(item.location.longitude)}`;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      s.append(a);
+      conteudo.append(s);
+    }
+    if (item.finalidade === "venda" && precoDo(item) > 0) {
+      const s = secao("Simulação de financiamento"),
+        form = el("form", "painel");
+      const label = el("label", null, "Valor de entrada"),
+        input = el("input");
+      input.type = "number";
+      input.min = "0";
+      input.required = true;
+      label.append(input);
+      const output = el("p");
+      output.setAttribute("role", "status");
+      const button = el("button", "botao", "Calcular saldo estimado");
+      button.type = "submit";
+      form.append(label, button, output);
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!input.checkValidity()) {
+          output.textContent = "Informe um valor de entrada válido.";
+          return;
+        }
+        output.textContent = `Saldo antes de juros e taxas: ${money(Math.max(0, precoDo(item) - Number(input.value)))}`;
+      });
+      s.append(form);
+      conteudo.append(s);
+    }
+    aside.append(el("h2", null, "Fale com o anunciante"));
+    const contact = item.contact_info || {};
+    const nomeAnunciante = contact.name || cliente?.nome;
+    if (nomeAnunciante)
+      aside.append(el("p", "anunciante-nome", nomeAnunciante));
+    const phone = String(
+      contact.phone || cliente?.telefone_publico || "",
+    ).replace(/[^+\d]/g, "");
+    const whatsapp = String(cliente?.whatsapp || "").replace(/[^\d]/g, "");
+    if (whatsapp) {
+      const mensagem = encodeURIComponent(
+        `Olá, tenho interesse neste imóvel:\n${item.titulo}\nCódigo: ${item.codigo}\n${location.href}`,
+      );
+      aside.append(
+        linkContato("WhatsApp", `https://wa.me/${whatsapp}?text=${mensagem}`),
+      );
+    }
+    if (phone) aside.append(linkContato("Ligar", `tel:${phone}`));
+    if (contact.email)
+      aside.append(linkContato("Enviar e-mail", `mailto:${contact.email}`));
+    if (!phone && !whatsapp && !contact.email)
+      aside.append(el("p", null, "Canais de contato indisponíveis."));
+    const anunciante = el("a", "botao botao-secundario", "Ver anunciante");
+    anunciante.href = `cliente.html?id=${encodeURIComponent(item.cliente_id)}`;
+    aside.append(anunciante);
+    layout.append(conteudo, aside);
+    root.append(layout);
+    const barra = document.querySelector("#barra-contato");
+    if (phone || whatsapp || contact.email) {
+      if (whatsapp)
+        barra.append(linkContato("WhatsApp", `https://wa.me/${whatsapp}`));
+      if (phone) barra.append(linkContato("Ligar", `tel:${phone}`));
+      if (contact.email)
+        barra.append(linkContato("Contato", `mailto:${contact.email}`));
+      barra.hidden = false;
+      document.body.classList.add("tem-barra-contato");
+    }
+    try {
+      const cards = await loadCards(),
+        similares = cards
+          .filter(
+            (x) =>
+              x.id !== item.id &&
+              x.tipo === item.tipo &&
+              x.cidade === item.cidade,
+          )
+          .slice(0, 3);
+      if (similares.length) {
+        const s = secao("Imóveis similares"),
+          grid = el("div", "cards");
+        similares.forEach((x) => grid.append(criarCard(x)));
+        s.append(grid);
+        root.append(s);
+      }
+      const ids = JSON.parse(
+          sessionStorage.getItem("imoveis:resultado") || "[]",
+        ),
+        pos = ids.indexOf(item.id);
+      if (pos >= 0) {
+        const nav = el("nav", "navegacao-imovel");
+        nav.setAttribute("aria-label", "Imóvel anterior e próximo");
+        for (const [target, label] of [
+          [ids[pos - 1], "← Imóvel anterior"],
+          [ids[pos + 1], "Próximo imóvel →"],
+        ])
+          if (target) {
+            const a = el("a", null, label);
+            a.href = `imovel.html?id=${encodeURIComponent(target)}&retorno=${encodeURIComponent(retorno || "resultados.html")}`;
+            nav.append(a);
+          }
+        root.append(nav);
+      }
+    } catch (error) {
+      /* módulo opcional indisponível não interrompe o detalhe */
+    }
+  } catch (error) {
+    root.replaceChildren();
+    const state = el("section", "estado estado-erro");
+    state.append(
+      el("h1", null, "Imóvel indisponível"),
+      el(
+        "p",
+        null,
+        error.message === "json"
+          ? "Os dados deste imóvel são inválidos."
+          : "Este imóvel foi removido ou não pôde ser carregado.",
+      ),
+    );
+    root.append(state);
+  }

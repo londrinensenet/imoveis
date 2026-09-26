@@ -26,12 +26,25 @@ class VisualSystemTests(unittest.TestCase):
         for path in PUBLIC.glob("*.html"):
             tags = Tags(); tags.feed(path.read_text())
             names = [name for name, _ in tags.tags]
-            self.assertIn("main", names, path.name); self.assertIn("header", names, path.name)
-            self.assertIn("footer", names, path.name)
+            self.assertIn("main", names, path.name)
+            self.assertTrue(any(attrs.get("data-component") == "header" for _, attrs in tags.tags), path.name)
+            self.assertTrue(any(attrs.get("data-component") == "footer" for _, attrs in tags.tags), path.name)
             self.assertTrue(any(attrs.get("class") == "skip" for name, attrs in tags.tags if name == "a"), path.name)
         nav = (PUBLIC / "assets/js/navigation.js").read_text()
         for term in ("aria-expanded", "Escape", ".focus()", "aria-current"):
             self.assertIn(term, nav)
+
+
+    def test_componentes_globais_e_configuracao_vertical(self):
+        header = (PUBLIC / "componentes/header.html").read_text()
+        footer = (PUBLIC / "componentes/footer.html").read_text()
+        config = (PUBLIC / "assets/js/site-config.js").read_text()
+        self.assertIn("data-navigation", header); self.assertNotIn("Comprar", header)
+        self.assertIn("data-footer-vertical", footer); self.assertNotIn("Apartamentos", footer)
+        self.assertIn('vertical:"Imóveis"', config); self.assertIn("navegacao", config)
+        for path in PUBLIC.glob("*.html"):
+            self.assertEqual(path.read_text().count('data-component="header"'), 1, path.name)
+            self.assertEqual(path.read_text().count('data-component="footer"'), 1, path.name)
 
     def test_css_modular_tokens_componentes_e_breakpoints(self):
         required = ("tokens.css", "base.css", "layout.css", "components.css", "responsive.css")
@@ -46,9 +59,13 @@ class VisualSystemTests(unittest.TestCase):
 
     def test_filtros_cards_favoritos_comparacao_e_estados(self):
         scripts = "\n".join(p.read_text() for p in (PUBLIC / "assets/js").rglob("*.js"))
-        for term in ('modo:"full"', 'modo:"compact"', "chip", "modo-lista", "Imóvel indisponível",
-                     "Anunciante indisponível", "formato inválido", "skeleton"):
-            self.assertIn(term, scripts + (PUBLIC / "assets/css/components.css").read_text())
+        scripts_compact = ''.join(scripts.split())
+        combined = scripts + (PUBLIC / "assets/css/components.css").read_text()
+        for term in ("chip", "modo-lista", "Imóvel indisponível", "Anunciante indisponível",
+                     "formato inválido", "skeleton"):
+            self.assertIn(term, combined)
+        for term in ('modo:"full"', 'modo:"compact"'):
+            self.assertIn(term, scripts_compact)
         self.assertIn("MAXIMO=4", (PUBLIC / "assets/js/modules/comparador.js").read_text())
         self.assertIn("reconciliar", (PUBLIC / "assets/js/modules/favoritos.js").read_text())
 
