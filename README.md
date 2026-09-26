@@ -13,7 +13,7 @@ O documento [ARQUITETURA.md](ARQUITETURA.md) é a fonte oficial e obrigatória d
 
 ## Estado atual — FASE 4
 
-A implementação funcional foi auditada e submetida aos testes finais locais. O resultado e as ressalvas externas estão em [`docs/testes/FASE-4-RESULTADO-FINAL.md`](docs/testes/FASE-4-RESULTADO-FINAL.md). Nenhuma configuração externa ou publicação é realizada automaticamente: consulte [`docs/operacao/GUIA.md`](docs/operacao/GUIA.md).
+A implementação funcional foi auditada e submetida aos testes finais locais. O resultado e as ressalvas externas estão em [`docs/testes/FASE-4-RESULTADO-FINAL.md`](docs/testes/FASE-4-RESULTADO-FINAL.md). Nenhuma configuração externa ou publicação é realizada automaticamente: consulte [`docs/operacao/GUIA.md`](docs/operacao/GUIA.md). Após o merge manual em `main`, um novo commit dispara uma execução independente do workflow de publicação do GitHub Pages.
 
 ## Desenvolvimento
 
