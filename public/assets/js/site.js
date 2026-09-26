@@ -5,10 +5,10 @@ import {
   el,
   fallback,
   urlPublica,
-} from "./common.js?v=20260926-1";
-import { criarFiltros } from "./modules/filtros.js?v=20260926-1";
-import { criarCard } from "./modules/listagem.js?v=20260926-1";
-import { CATEGORIAS } from "./modules/filtros/definicoes.js?v=20260926-1";
+} from "./common.js?v=20260926-2";
+import { criarFiltros } from "./modules/filtros.js?v=20260926-2";
+import { criarCard } from "./modules/listagem.js?v=20260926-2";
+import { CATEGORIAS } from "./modules/filtros/definicoes.js?v=20260926-2";
 
 const status = document.querySelector("#status"),
   categorias = document.querySelector("#categorias"),

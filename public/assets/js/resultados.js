@@ -1,4 +1,4 @@
-import{loadCards,el}from"./common.js?v=20260926-1";import{criarFiltros,ESTADO_INICIAL}from"./modules/filtros.js?v=20260926-1";import{criarListagem}from"./modules/listagem.js?v=20260926-1";
+import{loadCards,el}from"./common.js?v=20260926-2";import{criarFiltros,ESTADO_INICIAL}from"./modules/filtros.js?v=20260926-2";import{criarListagem}from"./modules/listagem.js?v=20260926-2";
 const rootListagem=document.querySelector("#listagem"),filtros=document.querySelector("#filtros"),listagem=rootListagem?criarListagem(rootListagem):null,chips=document.querySelector("#chips"),titulo=document.querySelector("#titulo-busca"),resumo=document.querySelector("#resumo-busca");
 if(listagem)listagem.carregando();
 const nomes={finalidade:"Finalidade",categoria:"Categoria",cidade:"Cidade",regiao:"Região",bairro:"Bairro",precoMin:"Preço mínimo",precoMax:"Preço máximo",quartos:"Quartos",vagas:"Vagas",features:"Comodidades"};
