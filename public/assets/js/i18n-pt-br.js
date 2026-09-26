@@ -26,6 +26,9 @@ export const UI_TEXT = Object.freeze({
   Blog: "Notícias",
   "Property Details": "Detalhes do imóvel",
   "No results": "Nenhum imóvel encontrado",
+  "Open menu": "Abrir menu",
+  "Close menu": "Fechar menu",
+  "Back to top": "Subir ao topo",
 });
 
 const currencyFormatter = new Intl.NumberFormat(LOCALE, {
