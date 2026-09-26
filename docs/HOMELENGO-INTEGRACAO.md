@@ -1,8 +1,8 @@
-# Preparação da integração Homelengo + Londrinense
+# Homelengo → Londrinense
 
 ## 1. Escopo e base da auditoria
 
-Esta preparação parte do SHA base `82f4d432ffdb94812022632a321b29b299673ff7`, na branch `codex/preparacao-integracao-homelengo`. O Homelengo será somente uma referência visual e estrutural; a navegação estática, os dados públicos, os filtros e as regras do Londrinense continuam sendo a fonte funcional.
+Esta preparação parte do SHA base `c1cd5655a03d455d94eac49fd9414a5adc28b8f4`, na branch `codex/prepara-integracao-homelengo`. O Homelengo será somente uma referência visual e estrutural; a navegação estática, os dados públicos, os filtros e as regras do Londrinense continuam sendo a fonte funcional.
 
 Esta fase **não altera o frontend em uso**: nenhum HTML ou CSS público foi ligado ao template, nenhum script de produção passou a importar código do Homelengo e nenhum dado, imagem, plugin ou conteúdo fictício foi copiado. Também não abrange backend, painel, importadores, schemas, workflows, sincronização ou read models.
 
@@ -43,6 +43,8 @@ Esta fase **não altera o frontend em uso**: nenhum HTML ou CSS público foi lig
 
 ### Estrutura visual encontrada
 
+Foram inspecionados `index.html`, `home-02.html` a `home-06.html`; `sidebar-grid.html`, `sidebar-list.html`, `topmap-grid.html`, `topmap-list.html`, `property-halfmap-grid.html` e `property-halfmap-list.html`; `property-details-v1.html` a `property-details-v4.html`; `blog.html`, `blog-grid.html` e `blog-detail.html`. A auditoria de base incluiu ainda `css/styles.css`, `css/bootstrap.min.css`, `fonts/` e `js/main.js`.
+
 - **Header e footer:** todas as páginas avaliadas repetem `main-header`, navegação desktop, menu móvel e footer em HTML. O header pode ser fixo e troca estado no scroll; o footer usa colunas expansíveis no celular.
 - **Container e grid:** Bootstrap fornece `.container`, linhas e colunas. `styles.css` acrescenta composições próprias, sidebar fixa, cards e seções `flat-*`.
 - **Tipografia:** `fonts/fonts.css` declara Manrope, Rubik e Poppins por arquivos externos; `fonts/font-icons.css` e os arquivos IcoMoon fornecem ícones. A predominância visual útil é Manrope, mas a decisão futura deve passar por tokens e arquivos locais, sem trazer todas as famílias.
@@ -68,6 +70,8 @@ Esta fase **não altera o frontend em uso**: nenhum HTML ou CSS público foi lig
 `css/bootstrap.min.css` e `css/styles.css` não serão copiados para a raiz pública. Caso um padrão seja aprovado na implementação, somente as regras necessárias serão reescritas na camada adequada de `public/assets/css/`, evitando colisões de classes, CSS não utilizado e dependências implícitas.
 
 ## 4. Recomendação comparativa
+
+As Homes 02–06 foram descartadas como base principal por priorizarem variações de hero, mapa, categorias ou composições menos diretamente compatíveis com a Home atual. As listagens com mapa foram descartadas porque adicionam uma superfície funcional e dependências que os read models atuais não exigem. Nos detalhes, as variantes v2–v4 agregam composições ou integrações mais custosas sem melhorar o encaixe com o JSON individual existente.
 
 ### Home recomendada: `template-homelengo/index.html`
 
@@ -122,6 +126,8 @@ A linguagem visual deve ser **replicável no código-fonte, nunca consumida em r
 - **Shell por instalação:** header e footer permanecem fragmentos locais em `public/componentes/`, hidratados por `componentes.js` e configurados pelo `site-config.js` local. Assim, cada portal pode evoluir/publicar independentemente.
 - **Contrato documentado:** após validação visual, registrar versão dos tokens, anatomia dos componentes, estados, acessibilidade e exemplos em `docs/design/`, permitindo reprodução controlada sem CDN compartilhada, pacote remoto ou chamada entre domínios.
 - **Dependências mínimas:** preferir CSS e ES modules nativos. Qualquer fonte ou biblioteca aprovada deve ser vendorizada e versionada apenas no portal que a usa, com licença e finalidade registradas.
+
+O Homelengo fornece apenas estrutura, medidas, tipografia, espaçamento, componentes, responsividade e estética de referência. Não fornece marca, conteúdo, textos, dados, anunciantes nem imóveis fictícios. Toda instalação deve preservar o nome e o logo Londrinense, o verde da marca, os links reais e os dados reais do sistema. Header, footer, container, tipografia, botões, raios, sombras, ícones, scroll-to-top, breakpoints e espaçamentos formam a base visual padronizada, mas cada portal gêmeo permanece uma instalação autônoma, sem dependência em runtime.
 
 ## 8. Sequência segura para a futura implementação
 
