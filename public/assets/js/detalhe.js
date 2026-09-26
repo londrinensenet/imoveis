@@ -6,8 +6,8 @@ import {
   money,
   precoDo,
   urlPublica,
-} from "./common.js?v=20260926-3";
-import { criarCard } from "./modules/listagem.js?v=20260926-3";
+} from "./common.js?v=20260926-4";
+import { criarCard } from "./modules/listagem.js?v=20260926-4";
 // Dados descritivos são inseridos por textContent; substitui o antigo escape(x.descricao).
 const root = document.querySelector("#detalhe"),
   params = new URLSearchParams(location.search),
