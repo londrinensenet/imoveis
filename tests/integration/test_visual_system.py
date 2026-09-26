@@ -42,6 +42,9 @@ class VisualSystemTests(unittest.TestCase):
         self.assertIn("data-navigation", header); self.assertNotIn("Comprar", header)
         self.assertIn("data-footer-vertical", footer); self.assertNotIn("Apartamentos", footer)
         self.assertIn('vertical:"Imóveis"', config); self.assertIn("navegacao", config)
+        componentes = (PUBLIC / "assets/js/componentes.js").read_text()
+        self.assertIn('querySelector("[data-global-header] [data-vertical]")', componentes)
+        self.assertNotIn('querySelector("[data-vertical]")', componentes)
         for path in PUBLIC.glob("*.html"):
             self.assertEqual(path.read_text().count('data-component="header"'), 1, path.name)
             self.assertEqual(path.read_text().count('data-component="footer"'), 1, path.name)
