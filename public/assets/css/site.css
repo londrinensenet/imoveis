@@ -3,6 +3,7 @@
 @import url("layout.css?v=20260926-1");
 @import url("components.css?v=20260926-1");
 @import url("responsive.css?v=20260926-1");
+@import url("paridade.css?v=20260926-3");
 
 /* Ponto de entrada legado. Os estilos ficam separados por responsabilidade. */
 /* Compatibilidade auditável: @media(max-width:800px), :focus, outline:3px, color:#17212b, background:#f5f7f6. */
