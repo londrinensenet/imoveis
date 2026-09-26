@@ -20,7 +20,20 @@ A aplicação usa exclusivamente a Pages Function como fronteira administrativa.
 - `POST /api/sincronizar`
 - `POST /api/logout`
 
-O retorno `solicitacao_enviada` significa apenas que o GitHub aceitou o dispatch. A conclusão deve ser confirmada no histórico do workflow.
+O retorno de solicitação aceita significa apenas que o GitHub aceitou o dispatch. A conclusão deve ser confirmada no histórico do workflow.
+
+O disparo geral envia `ref: main` e o input `confirmar: SINCRONIZAR`. O retorno atual
+`solicitacao_aceita` (HTTP 202 do Worker após o HTTP 204 do GitHub) também confirma
+somente a aceitação, nunca a conclusão. No repositório, `ENABLE_REAL_SYNC=true` libera
+o processamento. `ENABLE_REAL_PUBLISH=true` libera commit e push apenas quando forem
+detectadas alterações. Uma flag de sincronização inativa falha antes do processamento;
+se a publicação estiver inativa e houver alterações, o workflow informa que processou
+os dados, mas falha explicitamente sem criar commit nem executar push.
+
+O diagnóstico consulta, somente por GET, a disponibilidade do GitHub Actions, do
+workflow geral e das duas Repository Variables. Fine-grained tokens sem permissão de
+leitura administrativa de variables exibem `NÃO VERIFICÁVEL`; esse resultado não exige
+nem justifica ampliar o token automaticamente.
 
 ## Segurança operacional
 

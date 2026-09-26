@@ -18,7 +18,7 @@ class WorkflowAndExposureTests(unittest.TestCase):
             text=path.read_text()
             self.assertNotIn("contents: write",text) if "publicar:" not in text else None
             if "git push" in text:
-                self.assertIn("ENABLE_REAL_SYNC == 'true'",text)
+                self.assertIn("ENABLE_REAL_SYNC",text)
                 self.assertIn("ENABLE_REAL_PUBLISH == 'true'",text)
                 self.assertIn('git status --porcelain -- public private',text)
                 self.assertIn("steps.commit.outputs.created == 'true'",text)
@@ -26,6 +26,20 @@ class WorkflowAndExposureTests(unittest.TestCase):
         self.assertIn("workflow_dispatch",pages); self.assertIn("ENABLE_REAL_PUBLISH",pages)
         self.assertIn("python scripts/build.py",pages)
         self.assertIn("with: {path: dist}",pages); self.assertNotIn("private",pages)
+
+    def test_dispatch_manual_processamento_e_publicacao_condicionados(self):
+        sync=(ROOT/".github/workflows/sincronizar-feeds.yml").read_text()
+        self.assertIn("workflow_dispatch:",sync)
+        self.assertIn("os.environ['EVENTO'] == 'workflow_dispatch' or hora in {9, 12, 15, 18, 23}",sync)
+        self.assertIn("github.event_name == 'workflow_dispatch'",sync)
+        self.assertIn("test \"$ENABLE_REAL_SYNC\" != 'true'",sync)
+        self.assertIn("test \"$CONFIRMAR\" != 'SINCRONIZAR'",sync)
+        self.assertLess(sync.index("ENABLE_REAL_SYNC deve ser true"),sync.index("python -m src.publicacao.sync"))
+        self.assertIn("steps.changes.outputs.changed == 'true' && vars.ENABLE_REAL_PUBLISH == 'true'",sync)
+        self.assertIn("steps.changes.outputs.changed == 'true' && vars.ENABLE_REAL_PUBLISH != 'true'",sync)
+        self.assertIn("git status --porcelain -- public private",sync)
+        self.assertNotIn("git commit --allow-empty",sync)
+        self.assertIn("steps.commit.outputs.created == 'true' && vars.ENABLE_REAL_PUBLISH == 'true'",sync)
 
     def test_actions_fixadas_em_hash(self):
         for path in (ROOT/".github/workflows").glob("*.yml"):
