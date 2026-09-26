@@ -9,7 +9,7 @@ from src.normalizacao.normalizer import normalize
 from src.publicacao.generator import generate
 
 def safe_status(client_id, status, count=0, error=""):
-    message={"cliente_id":client_id,"estado":status,"horario":datetime.now(timezone.utc).isoformat(),"quantidade":count}
+    message={"cliente_id":client_id,"estado":status,"horario":datetime.now(timezone.utc).isoformat(),"quantidade":count,"resultado":status,"processados":count,"importados":count if status=="sucesso" else 0,"rejeitados":0}
     if error: message["erro"]="Falha ao obter ou validar o feed" # nunca inclui URL/detalhes
     atomic_write(client_path(client_id)/"sincronizacao.json",canonical_bytes(message))
 

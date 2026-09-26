@@ -8,7 +8,7 @@ class SyncTests(unittest.TestCase):
   with tempfile.TemporaryDirectory() as directory,patch("src.publicacao.sync.client_path",lambda _:Path(directory)):
    base=Path(directory);(base/"feed.json").write_text(json.dumps({"ativo":True,"feed_url":"https://feed.example/feed.xml"}));valid=(FIX/"feed-valido.xml").read_bytes()
    first=sync_client("cliente-a",lambda _:valid);second=sync_client("cliente-a",lambda _:(_ for _ in ()).throw(OSError("url secreta")))
-   self.assertEqual(first,second);self.assertNotIn("url secreta",(base/"sincronizacao.json").read_text())
+   self.assertEqual(first,second);status=json.loads((base/"sincronizacao.json").read_text());self.assertNotIn("url secreta",json.dumps(status));self.assertEqual(status["estado"],"falha");self.assertEqual(status["processados"],0);self.assertEqual(status["importados"],0);self.assertEqual(status["rejeitados"],0)
  def test_individual_preserva_outros_clientes(self):
   clients=[{"id":"cliente-a","ativo":True},{"id":"cliente-b","ativo":True}]
   cached=[{"id":"cliente-b-b1"}]

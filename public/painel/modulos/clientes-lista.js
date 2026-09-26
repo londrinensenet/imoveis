@@ -8,7 +8,10 @@ const addClientIcon='<svg class="button-icon" viewBox="0 0 24 24" aria-hidden="t
 export const canCreateClient=session=>session?.papel==='MASTER'||session?.papel==='SUPERADMIN'||session?.papel==='ADMIN'&&session?.direitos?.incluir===true;
 export const newClientLink=label=>`<a class="button" href="${NOVO_CLIENTE_ROUTE}">${addClientIcon}<span>${label}</span></a>`;
 
-const table=data=>`<table><thead><tr><th>Cliente</th><th>Tipo</th><th>Cidade</th><th>Status</th><th>Feed</th><th>Ações</th></tr></thead><tbody>${data.itens.map(x=>`<tr><td><strong>${escape(x.nome)}</strong><br><small>${escape(x.id)}</small></td><td>${escape(x.tipo)}</td><td>${escape(x.cidade||"—")}</td><td><span class="badge ${escape(x.status||"")}">${escape(x.status||(x.ativo===false?"inativo":"ativo"))}</span></td><td>${x.feed.configurado?escape(x.feed.status):"Não configurado"}</td><td><a href="#/clientes/${encodeURIComponent(x.id)}">Administrar</a></td></tr>`).join("")}</tbody></table>`;
+const syncLabels={nunca_sincronizado:"Nunca sincronizado",sincronizado:"Sincronizado",erro:"Erro",em_execucao:"Em execução"};
+const formatDate=value=>value&&!Number.isNaN(Date.parse(value))?new Intl.DateTimeFormat("pt-BR",{dateStyle:"short",timeStyle:"short",timeZone:"America/Sao_Paulo"}).format(new Date(value)):"";
+const feedState=feed=>{if(!feed.configurado)return"Não configurado";const label=syncLabels[feed.status]||syncLabels.nunca_sincronizado,date=formatDate(feed.horario);return`<span class="badge sync-${escape(feed.status)}">${escape(label)}</span>${date?`<br><small>${escape(date)}</small>`:""}`};
+const table=data=>`<table><thead><tr><th>Cliente</th><th>Tipo</th><th>Cidade</th><th>Status</th><th>Feed</th><th>Ações</th></tr></thead><tbody>${data.itens.map(x=>`<tr><td><strong>${escape(x.nome)}</strong><br><small>${escape(x.id)}</small></td><td>${escape(x.tipo)}</td><td>${escape(x.cidade||"—")}</td><td><span class="badge ${escape(x.status||"")}">${escape(x.status||(x.ativo===false?"inativo":"ativo"))}</span></td><td>${feedState(x.feed)}</td><td><a href="#/clientes/${encodeURIComponent(x.id)}">Administrar</a></td></tr>`).join("")}</tbody></table>`;
 
 export async function clientes(root,query=new URLSearchParams()){
  const allowed=canCreateClient(getSession()),primaryAction=allowed?newClientLink('Novo cliente'):'';
