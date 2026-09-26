@@ -1,0 +1,7 @@
+{
+  "cliente_id": "00001",
+  "feed_url": "https://teste.londrinense.net/imoveis.xml",
+  "origem": "KENLO",
+  "formato": "xml",
+  "ativo": true
+}
