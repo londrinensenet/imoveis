@@ -74,8 +74,8 @@ test('URL do feed fica somente no arquivo privado e não no cliente nem na respo
  assert.equal(response.status,201);assert.deepEqual(body,{salvo:true,id:'00001'});assert.doesNotMatch(JSON.stringify(github.files.get('private/clientes/00001/cliente.json').value),/crm\.example/);assert.match(github.files.get('private/clientes/00001/feed.json').value.feed_url,/crm\.example/);
 });
 
-test('configuração ausente e respostas GitHub 401, 403, 404 de branch e 409 são diagnosticadas sem segredos',async()=>{
- const cases=[[401,'AUTENTICACAO'],[403,'PERMISSAO'],[404,'BRANCH'],[409,'CONFLITO'],[418,'GITHUB_INESPERADO']];
+test('configuração ausente e respostas GitHub 401, 403, 404 de branch e conflitos 409/422 são diagnosticadas sem segredos',async()=>{
+ const cases=[[401,'AUTENTICACAO'],[403,'PERMISSAO'],[404,'BRANCH'],[409,'CONFLITO'],[422,'CONFLITO'],[418,'GITHUB_INESPERADO']];
  for(const [status,code] of cases){memoryGithub({},({path})=>path==='@branch'?Response.json({message:'safe'},{status}):null);const response=await testables.handle(request('/api/clientes','POST',payload(`${status}@example.com`),await authCookie()),baseEnv),text=await response.text();assert.equal(JSON.parse(text).codigo,code);assert.doesNotMatch(text,/authorization/i)}
  const response=await testables.handle(request('/api/clientes','POST',payload('config@example.com'),await authCookie()),{...baseEnv,['GITHUB_ADMIN_'+'TOKEN']:''});assert.equal(response.status,503);assert.equal((await response.json()).codigo,'CONFIGURACAO');
 });
