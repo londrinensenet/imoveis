@@ -46,8 +46,8 @@ test('API → setSession → getSession → clientes renderiza os dois CTAs do M
  assert.equal((`${root.innerHTML}${fields.list.innerHTML}`.match(/href="#\/clientes\/novo"/g)||[]).length,2);
 });
 
-test('falha 502 permanece restrita à listagem e preserva cabeçalho e CTA',async()=>{
- setSession(sessions.MASTER);globalThis.fetch=async()=>Response.json({erro:'Credencial do GitHub rejeitada.',codigo:'AUTENTICACAO'},{status:502});
+test('falha de dependência permanece restrita à listagem e preserva cabeçalho e CTA',async()=>{
+ setSession(sessions.MASTER);globalThis.fetch=async()=>Response.json({erro:'Credencial do GitHub rejeitada.',codigo:'AUTENTICACAO'},{status:424});
  const fields={status:{value:''},feed:{value:''},filters:{onsubmit:null},list:{innerHTML:''},count:{textContent:''},retry:{onclick:null}};
  const root={html:'',set innerHTML(value){this.html=value},get innerHTML(){return this.html},querySelector(selector){return selector==='[name="status"]'?fields.status:selector==='[name="feed"]'?fields.feed:selector==='#client-list'?fields.list:selector==='#client-count'?fields.count:selector==='#retry-clients'?fields.retry:fields.filters}};
  await clientes(root);assert.match(root.innerHTML,/<h1>Clientes<\/h1>/);assert.match(root.innerHTML,/>Novo cliente</);assert.match(fields.list.innerHTML,/Não foi possível carregar/);assert.match(fields.list.innerHTML,/Credencial do GitHub rejeitada/);assert.match(fields.list.innerHTML,/Tentar novamente/);assert.match(fields.list.innerHTML,/Executar diagnóstico/);assert.equal(typeof fields.retry.onclick,'function');

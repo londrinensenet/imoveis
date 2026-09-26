@@ -1,5 +1,5 @@
 import {getSession} from './sessao.js?v=20260925-clientes-sessao-v4';
-import {api} from "./api.js?v=20260925-github-diagnostico-v1";
+import {api} from "./api.js?v=20260926-github-integration-v2";
 import {escape,empty,toast,confirmAction} from "./componentes.js";
 
 export const NOVO_CLIENTE_ROUTE="#/clientes/novo";
