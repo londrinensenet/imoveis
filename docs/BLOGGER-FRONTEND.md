@@ -24,7 +24,7 @@ Os índices resumidos montam as listagens. JSONs individuais são solicitados so
 
 ## Instalação no Blogger
 
-Crie páginas com os caminhos configurados (`imoveis`, `detalhe-imovel`, `anunciante`, `favoritos` e `comparar`). Inclua `portal.css`; depois, nesta ordem, `common.js`, `dados.js`, `favoritos.js`, `utils.js`, `mapa.js` e apenas o controlador da página. O template hospedeiro deve fornecer Remix Icon. Não é necessário editar ou duplicar dados no Blogger.
+Crie páginas com os caminhos configurados (`imoveis`, `detalhe-imovel`, `anunciante`, `favoritos` e `comparar`). Inclua `portal.css`; depois, nesta ordem, `common.js`, `dados.js`, `favoritos.js`, `utils.js`, `mapa.js` e apenas o controlador da página. Os ícones SVG são embutidos pelo núcleo, sem biblioteca de ícones externa. Não é necessário editar ou duplicar dados no Blogger.
 
 Configure **antes** dos scripts:
 
@@ -85,4 +85,4 @@ Para criar `template2`, preserve os quatro arquivos de `core/` e seus contratos 
 
 ## Limitações dos read models
 
-Os shards atuais não incluem `location`; o mapa precisa buscar detalhes com concorrência limitada. Dados institucionais completos do anunciante não fazem parte do índice `cliente_id/{id}`, então a página mostra apenas o identificador público e a carteira. Contato só aparece no detalhe quando `contact_info` fornece telefone ou WhatsApp público válido.
+Os shards atuais não incluem `location`; o mapa precisa buscar detalhes com concorrência limitada. Se os detalhes não contiverem latitude e longitude públicas válidas, o mapa mostra o estado “Localização indisponível”; não há como posicionar marcadores sem coordenadas. O Leaflet e os tiles do OpenStreetMap dependem de acesso às respectivas origens externas. Após o merge, atualize a versão `?v=` de todos os assets referenciados no Blogger para carregar CSS e JavaScript da mesma entrega. Dados institucionais completos do anunciante não fazem parte do índice `cliente_id/{id}`, então a página mostra apenas o identificador público e a carteira. Contato só aparece no detalhe quando `contact_info` fornece telefone ou WhatsApp público válido.
