@@ -40,6 +40,7 @@ class RealEstateModuleRegressionTests(unittest.TestCase):
         }
         item = normalize(raw, "cliente-ok")
         self.assertEqual(item["location"], {"zone": "Norte", "latitude": -23.31, "longitude": -51.16})
+        self.assertEqual(item["regiao"], "Norte")
         self.assertEqual(item["media"][0], {"type": "image", "url": "https://img.example/1.jpg", "primary": True, "caption": "Frente"})
         self.assertEqual(item["media"][1], {"type": "video", "url": "https://video.example/1"})
         self.assertEqual(item["fotos"], ["https://img.example/1.jpg"])
@@ -49,6 +50,17 @@ class RealEstateModuleRegressionTests(unittest.TestCase):
         self.assertNotIn("feed_url", item)
         self.assertNotIn("Secret", json.dumps(item))
         self.assertNotIn("Password", json.dumps(item))
+
+    def test_region_is_only_published_when_feed_declares_a_recognized_zone(self):
+        north = normalize({**BASE, "Location": {"Zone": "Zona Norte"}}, "cliente-ok")
+        unknown = normalize({**BASE, "bairro": "Centro", "Location": {"Zone": "Outro"}}, "cliente-ok")
+        self.assertEqual(north["regiao"], "Norte")
+        self.assertNotIn("regiao", unknown)
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "dados"
+            generate([north], [], output)
+            card = json.loads((output / "indices/todos/parte-0001.json").read_text())[0]
+            self.assertEqual(card["regiao"], "Norte")
 
     def test_rural_area_boundary_and_filter_use_square_metres(self):
         for value in (500, 1000, 9999):
