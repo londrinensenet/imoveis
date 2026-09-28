@@ -52,32 +52,34 @@
     destroy(root);
     const generation = generations.get(root);
     if (root.classList) root.classList.add("ln-map-host");
-    root.innerHTML = '<div class="ln-loading"><i class="ri-loader-4-line"></i> Carregando mapa...</div>';
+    root.innerHTML = '<div class="ln-loading">Carregando mapa...</div>';
     try {
       const detailed = await pool(records, item => U.coords(item) ? Promise.resolve(item) : L.Dados.getImovel(item.id), Math.max(1, L.Config.mapConcurrency || 4));
       if (generations.get(root) !== generation) return;
       const valid = detailed.filter(item => U.coords(item));
       if (!valid.length) {
-        root.innerHTML = '<div class="ln-empty"><i class="ri-map-pin-2-line"></i><h3>Localização indisponível</h3><p>Não há imóveis com localização disponível para exibir no mapa.</p></div>';
+        root.innerHTML = `<div class="ln-empty">${C.icon("pin")}<h3>Localização indisponível</h3><p>Não há imóveis com localização disponível para exibir no mapa.</p></div>`;
         return;
       }
       const Leaflet = await leaflet();
       if (generations.get(root) !== generation) return;
-      root.innerHTML = '<div class="ln-map" role="region" aria-label="Mapa dos imóveis"></div>';
+      root.innerHTML = '<div class="ln-map-shell"><div class="ln-map" role="region" aria-label="Mapa dos imóveis"></div></div>';
       await nextFrame();
       if (generations.get(root) !== generation) return;
-      const map = Leaflet.map(root.firstElementChild);
+      const mapElement = root.firstElementChild.firstElementChild;
+      const map = Leaflet.map(mapElement);
       instances.set(root, map);
       Leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {attribution: "&copy; OpenStreetMap contributors", maxZoom: 19}).addTo(map);
       const points = [];
+      const markerIcon = Leaflet.divIcon({className:"ln-map-marker",html:`<span>${C.icon("house")}</span>`,iconSize:[38,46],iconAnchor:[19,44],popupAnchor:[0,-42]});
       valid.forEach(item => {
         const point = U.coords(item), e = C.escapeHtml;
         points.push(point);
-        Leaflet.marker(point).addTo(map).bindPopup(`<div class="ln-popup">${U.media(item) ? `<img src="${e(U.media(item))}" alt="">` : ""}<strong>${e(item.titulo)}</strong><span>${e(C.brl(item.preco))}</span><small>${e(item.bairro || "")}</small><a href="${e(C.url(L.Config.urls.imovel, {id:item.id}))}">Ver imóvel</a></div>`);
+        Leaflet.marker(point,{icon:markerIcon}).addTo(map).bindPopup(`<div class="ln-popup">${U.media(item) ? `<img src="${e(U.media(item))}" alt="">` : ""}${item.tipo?`<small>${e(item.tipo)}</small>`:""}<strong>${e(item.titulo)}</strong><span>${e(C.brl(item.preco))}</span>${item.bairro?`<small>${e(item.bairro)}</small>`:""}<a href="${e(C.url(L.Config.urls.imovel, {id:item.id}))}">Ver imóvel</a></div>`);
       });
       const resize = () => {
         if (instances.get(root) !== map) return;
-        map.invalidateSize();
+        map.invalidateSize(true);
         if (points.length === 1) map.setView(points[0], 15);
         else {
           const bounds = Leaflet.latLngBounds(points);
