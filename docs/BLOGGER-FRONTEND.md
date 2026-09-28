@@ -24,7 +24,7 @@ Os índices resumidos montam as listagens. JSONs individuais são solicitados so
 
 ## Instalação no Blogger
 
-Crie páginas com os caminhos configurados (`imoveis`, `imovel`, `anunciante`, `favoritos` e `comparar`). Inclua `portal.css`; depois, nesta ordem, `common.js`, `dados.js`, `favoritos.js`, `utils.js`, `mapa.js` e apenas o controlador da página. O template hospedeiro deve fornecer Remix Icon. Não é necessário editar ou duplicar dados no Blogger.
+Crie páginas com os caminhos configurados (`imoveis`, `detalhe-imovel`, `anunciante`, `favoritos` e `comparar`). Inclua `portal.css`; depois, nesta ordem, `common.js`, `dados.js`, `favoritos.js`, `utils.js`, `mapa.js` e apenas o controlador da página. O template hospedeiro deve fornecer Remix Icon. Não é necessário editar ou duplicar dados no Blogger.
 
 Configure **antes** dos scripts:
 
@@ -34,7 +34,7 @@ window.LONDRINENSE_BLOGGER_CONFIG = {
   dataBase: "https://imoveis.londrinense.net/dados/",
   urls: {
     listagem: "/p/imoveis.html",
-    imovel: "/p/imovel.html",
+    imovel: "/p/detalhe-imovel.html",
     anunciante: "/p/anunciante.html",
     favoritos: "/p/favoritos.html",
     comparar: "/p/comparar.html"
@@ -64,6 +64,12 @@ Os exemplos mínimos de conteúdo das páginas são:
 ```
 
 Listagem aceita `finalidade`, `tipo`, `cidade`, `bairro`, `preco_min`, `preco_max`, `quartos`, `banheiros`, `vagas`, `area_min`, `area_max`, `ordem`, `pagina` e `view`. Detalhe e anunciante recebem `id`.
+
+As páginas confirmadas no Blogger são `/p/imoveis.html`, `/p/detalhe-imovel.html`, `/p/anunciante.html`, `/p/favoritos.html` e `/p/comparar.html`. A listagem deve conter `<div id="ln-listagem"></div>`; um detalhe, por exemplo, é aberto como `/p/detalhe-imovel.html?id=00001-tst-001`.
+
+## Versionamento de assets no Blogger
+
+Para invalidar caches do Blogger e da CDN sem renomear os arquivos publicados, use uma versão curta e única na querystring de **todos** os `link` e `script` do frontend, por exemplo `portal.css?v=20260928-1` e `common.js?v=20260928-1`. A cada publicação dos assets, altere esse mesmo valor em todas as referências. Como essas tags vivem no template/páginas do Blogger, a aplicação da versão requer uma edição manual posterior no Blogger; nenhum XML é alterado por este repositório nesta tarefa.
 
 ## URLs públicas
 
