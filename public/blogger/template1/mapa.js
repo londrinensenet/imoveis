@@ -5,7 +5,7 @@
   const instances = new WeakMap(), generations = new WeakMap();
 
   function leaflet() {
-    if (window.L) return Promise.resolve(window.L);
+    if (window.L && typeof window.L.map === "function") return Promise.resolve(window.L);
     if (loader) return loader;
     loader = new Promise((resolve, reject) => {
       const css = document.createElement("link");
@@ -18,11 +18,11 @@
       script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
       script.integrity = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
       script.crossOrigin = "";
-      script.onload = () => resolve(window.L);
+      script.onload = () => window.L && typeof window.L.map === "function" ? resolve(window.L) : reject(new Error("Biblioteca do mapa indisponível."));
       script.onerror = () => reject(new Error("Não foi possível carregar o mapa."));
       document.head.appendChild(script);
     });
-    return loader;
+    return loader.catch(error => { loader = null; throw error; });
   }
 
   async function pool(items, worker, limit) {
@@ -71,11 +71,14 @@
       instances.set(root, map);
       Leaflet.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {attribution: "&copy; OpenStreetMap contributors", maxZoom: 19}).addTo(map);
       const points = [];
-      const markerIcon = Leaflet.divIcon({className:"ln-map-marker",html:`<span>${C.icon("house")}</span>`,iconSize:[38,46],iconAnchor:[19,44],popupAnchor:[0,-42]});
+      const compactPrice = value => { const n = Number(value); return !Number.isFinite(n) || n <= 0 ? "Imóvel" : n >= 1000000 ? `R$ ${(n/1000000).toLocaleString("pt-BR",{maximumFractionDigits:1})} mi` : n >= 1000 ? `R$ ${Math.round(n/1000)} mil` : C.brl(n); };
       valid.forEach(item => {
         const point = U.coords(item), e = C.escapeHtml;
         points.push(point);
-        Leaflet.marker(point,{icon:markerIcon}).addTo(map).bindPopup(`<div class="ln-popup">${U.media(item) ? `<img src="${e(U.media(item))}" alt="">` : ""}${item.tipo?`<small>${e(item.tipo)}</small>`:""}<strong>${e(item.titulo)}</strong><span>${e(C.brl(item.preco))}</span>${item.bairro?`<small>${e(item.bairro)}</small>`:""}<a href="${e(C.url(L.Config.urls.imovel, {id:item.id}))}">Ver imóvel</a></div>`);
+        const price = e(compactPrice(item.preco));
+        const markerIcon = Leaflet.divIcon({className:"ln-map-price",html:`<span>${price}</span>`,iconSize:[96,36],iconAnchor:[48,18],popupAnchor:[0,-20]});
+        const marker = Leaflet.marker(point,{icon:markerIcon}).addTo(map).bindPopup(`<div class="ln-popup">${U.media(item) ? `<img src="${e(U.media(item))}" alt="">` : ""}${item.tipo?`<small>${e(item.tipo)}</small>`:""}<strong>${e(item.titulo)}</strong><span>${e(C.brl(item.preco))}</span>${item.bairro?`<small>${e(item.bairro)}</small>`:""}<a href="${e(C.url(L.Config.urls.imovel, {id:item.id}))}">Ver imóvel</a></div>`);
+        if (typeof marker.on === "function") marker.on("popupopen", () => { if (marker.getElement) marker.getElement()?.classList.add("is-selected"); }).on("popupclose", () => { if (marker.getElement) marker.getElement()?.classList.remove("is-selected"); });
       });
       const resize = () => {
         if (instances.get(root) !== map) return;
