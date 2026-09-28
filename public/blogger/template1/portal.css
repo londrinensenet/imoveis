@@ -320,6 +320,7 @@
 #ln-portal .ln-cards--horizontal .ln-card__advertiser{right:12px;bottom:12px}
 #ln-portal .ln-cards--horizontal .ln-card__body{padding:16px 18px 0}
 #ln-portal .ln-cards--horizontal .ln-card__footer{margin:0 -18px;padding:9px 18px}
+#ln-portal .ln-cards--horizontal .ln-card__footer-price{flex:1;text-align:center}
 #ln-portal .ln-cards--horizontal .ln-facts{grid-template-columns:repeat(4,minmax(0,1fr))}
 #ln-portal .ln-compare-overlay[hidden],#ln-portal .ln-compare-drawer__link[hidden]{display:none!important}
 #ln-portal .ln-compare-overlay{position:fixed;z-index:10020;inset:0;display:flex;justify-content:flex-end;background:rgba(7,24,16,.66)}
@@ -351,7 +352,7 @@ html.ln-compare-open{overflow:hidden}
   #ln-portal .ln-cards--horizontal .ln-facts li{flex-direction:row;font-size:12px}
   #ln-portal .ln-cards--horizontal .ln-facts li .ln-icon{width:17px;height:17px}
   #ln-portal .ln-cards--horizontal .ln-card__footer{align-items:flex-start;flex-wrap:wrap;gap:0;margin:0 -10px;padding:7px 10px}
-  #ln-portal .ln-cards--horizontal .ln-card__footer-price{font-size:15px}
+  #ln-portal .ln-cards--horizontal .ln-card__footer-price{flex-basis:100%;padding:4px 0;font-size:15px}
   #ln-portal .ln-cards--horizontal .ln-card__actions{margin-left:auto}
   #ln-portal .ln-cards--horizontal .ln-card__actions .ln-icon-btn{width:32px;height:32px}
   #ln-portal .ln-compare-drawer{width:min(390px,94vw);padding:18px}
