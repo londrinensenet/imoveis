@@ -10,8 +10,9 @@ from collections import defaultdict
 from pathlib import Path
 
 from src.core.io import canonical_bytes
+from src.normalizacao.normalizer import _region_from_zone
 
-CARD_FIELDS = ("id", "cliente_id", "titulo", "cidade", "bairro", "regiao", "uf", "finalidade", "tipo", "preco", "preco_venda", "preco_aluguel", "area", "area_util", "area_terreno", "quartos", "suites", "banheiros", "vagas", "andar", "andares", "ano_construcao", "subtipo", "features")
+CARD_FIELDS = ("id", "cliente_id", "titulo", "cidade", "bairro", "regiao", "uf", "finalidade", "tipo", "preco", "preco_venda", "preco_aluguel", "area", "area_util", "area_terreno", "quartos", "suites", "banheiros", "vagas", "andar", "andares", "ano_construcao", "subtipo", "features", "location")
 FULL_FIELDS = CARD_FIELDS + ("codigo", "descricao", "fotos", "location", "media", "features", "contact_info", "virtual_tour_link", "area_apresentacao")
 PUBLIC_CLIENT_FIELDS = ("id", "tipo", "creci", "nome_publico", "telefone_publico", "whatsapp", "email_publico", "site", "imagem_tipo", "imagem_url", "descricao_publica")
 TARGET = 1_000_000
@@ -60,6 +61,11 @@ def generate(properties: list[dict], clients: list[dict], output: Path) -> bool:
     existir, sem expor uma publicação parcialmente atualizada.
     """
     properties = sorted(properties, key=lambda item: item["id"])
+    # Snapshots criados antes da normalização de Zone continuam publicáveis.
+    # Somente a zona declarada no feed pode preencher a região; bairro não serve.
+    properties = [prop | {"regiao": _region_from_zone(prop.get("location", {}).get("zone"))}
+                  if not prop.get("regiao") and _region_from_zone(prop.get("location", {}).get("zone"))
+                  else prop for prop in properties]
     ids = [item["id"] for item in properties]
     if any(not re.fullmatch(r"[a-z0-9][a-z0-9-]{2,159}", item_id) for item_id in ids):
         raise ValueError("ID público inválido")
