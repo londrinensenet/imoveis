@@ -12,6 +12,7 @@
     return requests.get(target);
   }
   function getManifesto() { return request("indices/manifesto.json"); }
+  function getClientes() { return request("clientes/clientes.json"); }
   async function getIndice(chave) {
     const key = String(chave || "").replace(/^\/+|\/+$/g, "");
     if (!/^[a-z0-9_-]+(?:\/[a-z0-9_-]+)?$/i.test(key)) throw new Error("Chave de índice inválida");
@@ -24,5 +25,5 @@
     if (!L.Common.validId(id)) return Promise.reject(new Error("ID de imóvel inválido"));
     return request("imoveis/" + encodeURIComponent(id) + ".json");
   }
-  L.Dados = Object.freeze({ getManifesto, getIndice, getImovel, getTodos: () => getIndice("todos"), _request: request });
+  L.Dados = Object.freeze({ getManifesto, getClientes, getIndice, getImovel, getTodos: () => getIndice("todos"), _request: request });
 })(window);

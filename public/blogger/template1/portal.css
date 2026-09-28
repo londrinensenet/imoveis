@@ -289,3 +289,70 @@
   #ln-portal .ln-view{min-width:0;min-height:48px;padding:5px 1px;font-size:10px}
   #ln-portal .ln-view .ln-icon{width:19px;height:19px}
 }
+/* Cards no padrão escolhido: foto, identidade do anunciante e preço no rodapé. */
+#ln-portal .ln-card{overflow:hidden}
+#ln-portal .ln-card__media-wrap{overflow:visible;z-index:1}
+#ln-portal .ln-card__media{aspect-ratio:16/10;overflow:hidden}
+#ln-portal .ln-cards--vertical .ln-card__media{aspect-ratio:16/10}
+#ln-portal .ln-card__badges{top:14px;left:14px}
+#ln-portal .ln-card__advertiser{position:absolute;z-index:4;right:14px;bottom:-23px;display:grid;place-items:center;width:48px;height:48px;overflow:hidden;border:3px solid #fff;border-radius:50%;background:#fff;color:var(--ln-green);box-shadow:0 3px 13px rgba(0,0,0,.2)}
+#ln-portal .ln-card__advertiser img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff}
+#ln-portal .ln-card__advertiser .ln-icon{width:24px;height:24px}
+#ln-portal .ln-card__body{position:relative;display:flex;flex:1;flex-direction:column;gap:0;padding:22px 16px 0}
+#ln-portal .ln-card__content{padding:0 0 16px}
+#ln-portal .ln-card__type{font-size:12px}
+#ln-portal .ln-card h3{font-size:19px;margin:5px 0 8px}
+#ln-portal .ln-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;gap:6px;margin:16px 0 0;padding:16px 0 0}
+#ln-portal .ln-facts li{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;text-align:center;font-size:14px}
+#ln-portal .ln-facts li .ln-icon{width:21px;height:21px}
+#ln-portal .ln-card__footer{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:64px;margin:0 -16px;padding:9px 16px;border-top:1px solid var(--ln-border)}
+#ln-portal .ln-card__footer-price{font-size:19px;line-height:1.15;color:var(--ln-heading);white-space:nowrap}
+#ln-portal .ln-card__actions{display:flex;gap:2px;margin:0}
+#ln-portal .ln-card__actions .ln-icon-btn{width:36px;height:36px;border:0;background:transparent}
+#ln-portal .ln-card__actions .ln-icon-btn:hover,#ln-portal .ln-card__actions .ln-icon-btn.is-active{background:var(--ln-soft)}
+#ln-portal .ln-card__favorite{position:static;box-shadow:none;border-radius:9px;color:var(--ln-muted)}
+#ln-portal .ln-card__compare.is-active{color:var(--ln-green)}
+#ln-portal .ln-cards--vertical .ln-card__body{padding:22px 15px 0}
+#ln-portal .ln-cards--vertical .ln-facts{grid-template-columns:repeat(4,minmax(0,1fr))}
+#ln-portal .ln-cards--vertical .ln-card__footer{margin:0 -15px;padding:9px 15px}
+#ln-portal .ln-cards--horizontal .ln-card{grid-template-columns:minmax(200px,36%) minmax(0,1fr)}
+#ln-portal .ln-cards--horizontal .ln-card__media-wrap,#ln-portal .ln-cards--horizontal .ln-card__media{height:100%;min-height:220px;aspect-ratio:auto}
+#ln-portal .ln-cards--horizontal .ln-card__advertiser{right:12px;bottom:12px}
+#ln-portal .ln-cards--horizontal .ln-card__body{padding:16px 18px 0}
+#ln-portal .ln-cards--horizontal .ln-card__footer{margin:0 -18px;padding:9px 18px}
+#ln-portal .ln-cards--horizontal .ln-facts{grid-template-columns:repeat(4,minmax(0,1fr))}
+#ln-portal .ln-compare-overlay[hidden],#ln-portal .ln-compare-drawer__link[hidden]{display:none!important}
+#ln-portal .ln-compare-overlay{position:fixed;z-index:10020;inset:0;display:flex;justify-content:flex-end;background:rgba(7,24,16,.66)}
+#ln-portal .ln-compare-drawer{width:min(440px,100%);height:100%;overflow:auto;padding:22px;background:var(--ln-surface);box-shadow:-12px 0 36px rgba(0,0,0,.22)}
+#ln-portal .ln-compare-drawer header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:18px;border-bottom:1px solid var(--ln-border)}
+#ln-portal .ln-compare-drawer h2{margin:0;font-size:22px;color:var(--ln-heading)}
+#ln-portal .ln-compare-drawer header button,#ln-portal .ln-compare-drawer__item button{display:grid;place-items:center;min-width:42px;min-height:42px;border:1px solid var(--ln-border);border-radius:8px;background:var(--ln-surface);color:var(--ln-heading);cursor:pointer}
+#ln-portal .ln-compare-drawer__item{display:flex;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--ln-border)}
+#ln-portal .ln-compare-drawer__item img{width:74px;height:68px;flex:none;border-radius:8px;object-fit:cover}
+#ln-portal .ln-compare-drawer__item div{display:grid;min-width:0;flex:1;gap:4px}
+#ln-portal .ln-compare-drawer__item strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+#ln-portal .ln-compare-drawer__item span{font-size:15px;color:var(--ln-green);font-weight:700}
+#ln-portal .ln-compare-drawer__link{display:flex;width:100%;margin-top:20px}
+#ln-portal .ln-compare-drawer__hint,#ln-portal .ln-compare-drawer__empty{font-size:15px;color:var(--ln-muted)}
+html.ln-compare-open{overflow:hidden}
+@media(max-width:1150px){#ln-portal .ln-cards--vertical .ln-facts{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){
+  #ln-portal .ln-cards--vertical .ln-card__body{padding:22px 16px 0}
+  #ln-portal .ln-cards--vertical .ln-card__footer{margin:0 -16px;padding:10px 16px}
+  #ln-portal .ln-cards--vertical .ln-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  #ln-portal .ln-cards--horizontal .ln-card{grid-template-columns:minmax(125px,36%) minmax(0,1fr)}
+  #ln-portal .ln-cards--horizontal .ln-card__media-wrap,#ln-portal .ln-cards--horizontal .ln-card__media{height:100%;min-height:210px;aspect-ratio:auto}
+  #ln-portal .ln-cards--horizontal .ln-card__badges span{font-size:10px;padding:4px 6px}
+  #ln-portal .ln-cards--horizontal .ln-card__advertiser{width:39px;height:39px}
+  #ln-portal .ln-cards--horizontal .ln-card__body{padding:12px 10px 0}
+  #ln-portal .ln-cards--horizontal .ln-card h3{font-size:16px}
+  #ln-portal .ln-cards--horizontal .ln-card__location{font-size:13px}
+  #ln-portal .ln-cards--horizontal .ln-facts{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:10px;padding-top:10px}
+  #ln-portal .ln-cards--horizontal .ln-facts li{flex-direction:row;font-size:12px}
+  #ln-portal .ln-cards--horizontal .ln-facts li .ln-icon{width:17px;height:17px}
+  #ln-portal .ln-cards--horizontal .ln-card__footer{align-items:flex-start;flex-wrap:wrap;gap:0;margin:0 -10px;padding:7px 10px}
+  #ln-portal .ln-cards--horizontal .ln-card__footer-price{font-size:15px}
+  #ln-portal .ln-cards--horizontal .ln-card__actions{margin-left:auto}
+  #ln-portal .ln-cards--horizontal .ln-card__actions .ln-icon-btn{width:32px;height:32px}
+  #ln-portal .ln-compare-drawer{width:min(390px,94vw);padding:18px}
+}
