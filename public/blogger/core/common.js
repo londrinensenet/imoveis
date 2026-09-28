@@ -4,7 +4,7 @@
   const supplied = window.LONDRINENSE_BLOGGER_CONFIG || {};
   const defaults = {
     dataBase: "https://imoveis.londrinense.net/dados/",
-    urls: { listagem: "/p/imoveis.html", imovel: "/p/imovel.html", anunciante: "/p/anunciante.html", favoritos: "/p/favoritos.html", comparar: "/p/comparar.html" },
+    urls: { listagem: "/p/imoveis.html", imovel: "/p/detalhe-imovel.html", anunciante: "/p/anunciante.html", favoritos: "/p/favoritos.html", comparar: "/p/comparar.html" },
     perPage: 12,
     mapConcurrency: 4
   };
