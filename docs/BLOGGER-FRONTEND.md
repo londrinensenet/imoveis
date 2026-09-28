@@ -20,7 +20,7 @@ public/blogger/
     └── mapa.js
 ```
 
-Os índices resumidos montam as listagens. JSONs individuais são solicitados somente por detalhe, favoritos, comparação ou mapa sem coordenadas no shard. Leaflet e OpenStreetMap são carregados somente ao abrir um mapa. Favoritos e comparação nunca saem do navegador.
+Os índices resumidos montam as listagens. JSONs individuais são solicitados somente por detalhe, favoritos, comparação ou mapa sem coordenadas no shard. Leaflet e OpenStreetMap são carregados somente ao abrir um mapa. Favoritos e comparação nunca saem do navegador. A listagem busca também `clientes/clientes.json` (somente campos públicos) para mostrar a logomarca circular do anunciante nos cards; se essa consulta falhar, o card continua funcional com ícone neutro. Nos modos vertical e horizontal, o preço fica no rodapé e o botão “+” abre a gaveta de comparação com seleção de até quatro imóveis.
 
 ## Instalação no Blogger
 
