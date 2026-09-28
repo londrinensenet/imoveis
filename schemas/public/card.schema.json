@@ -95,6 +95,16 @@
         "type": "string"
       },
       "uniqueItems": true
+    },
+    "regiao": {
+      "enum": [
+        "Central",
+        "Norte",
+        "Sul",
+        "Leste",
+        "Oeste",
+        "Rural"
+      ]
     }
   },
   "additionalProperties": false

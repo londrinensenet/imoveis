@@ -10,7 +10,7 @@
   };
   const config = Object.assign({}, defaults, supplied, { urls: Object.assign({}, defaults.urls, supplied.urls || {}) });
   config.dataBase = String(config.dataBase).replace(/\/*$/, "/");
-  const allowedParams = ["finalidade", "tipo", "cidade", "bairro", "preco_min", "preco_max", "quartos", "banheiros", "vagas", "area_min", "area_max", "ordem", "pagina", "view"];
+  const allowedParams = ["finalidade", "tipo", "regiao", "cidade", "bairro", "preco_min", "preco_max", "quartos", "banheiros", "vagas", "area_min", "area_max", "area_util_min", "area_util_max", "area_total_min", "area_total_max", "ordem", "pagina", "view"];
   const escapeHtml = value => String(value == null ? "" : value).replace(/[&<>'"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
   const normalize = value => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
   const validId = value => /^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(String(value || ""));

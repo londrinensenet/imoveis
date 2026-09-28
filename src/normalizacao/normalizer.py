@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from decimal import Decimal, InvalidOperation
 from urllib.parse import urlsplit
 
@@ -106,6 +107,13 @@ def _location(raw):
     return {key: value for key, value in result.items() if value not in (None, "")}
 
 
+def _region_from_zone(zone):
+    """Aceita somente uma região declarada pelo feed; nunca deduz pelo bairro."""
+    normalized = unicodedata.normalize("NFKD", text(zone, 100)).encode("ascii", "ignore").decode().lower().strip()
+    normalized = re.sub(r"^(zona|regiao)\s+", "", normalized)
+    return {"centro": "Central", "central": "Central", "norte": "Norte", "sul": "Sul", "leste": "Leste", "oeste": "Oeste", "rural": "Rural"}.get(normalized, "")
+
+
 def _media(raw):
     source = _first(raw, "Media", "media", default=[])
     if isinstance(source, dict):
@@ -208,6 +216,9 @@ def normalize(raw: dict, client_id: str) -> dict:
         "features": _features(raw),
         "contact_info": _contact_info(raw),
     }
+    region = _region_from_zone(location.get("zone") or _first(raw, "regiao", "Regiao"))
+    if region:
+        result["regiao"] = region
     # Um anúncio só entra na publicação quando a operação declarada possui preço
     # numérico estritamente positivo. A validação ocorre no core, antes dos JSONs.
     required_price = result["preco_venda" if purpose == "venda" else "preco_aluguel"]

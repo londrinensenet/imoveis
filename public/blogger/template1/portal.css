@@ -195,3 +195,97 @@
 #ln-portal .ln-popup strong{font-size:16px;line-height:1.3}
 @media(max-width:800px){#ln-portal .ln-cards--horizontal .ln-card{grid-template-columns:minmax(125px,38%) minmax(0,1fr)}#ln-portal .ln-cards--horizontal .ln-card__media-wrap,#ln-portal .ln-cards--horizontal .ln-card__media{height:100%;min-height:190px;aspect-ratio:auto}#ln-portal .ln-cards--horizontal .ln-card__body{padding:12px}#ln-portal .ln-cards--horizontal .ln-facts{flex-wrap:wrap;justify-content:flex-start}#ln-portal .ln-map-shell{height:420px}}
 @media(max-width:480px){#ln-portal .ln-views{border:0;padding:0;gap:4px}#ln-portal .ln-view{flex-direction:column;gap:1px;padding:5px 2px;font-size:11px}#ln-portal .ln-view .ln-icon{width:20px;height:20px}#ln-portal .ln-cards--horizontal .ln-card__price{font-size:15px;left:6px;bottom:6px;padding:5px}#ln-portal .ln-cards--horizontal .ln-card h3{font-size:16px}#ln-portal .ln-cards--horizontal .ln-card__location{font-size:13px}#ln-portal .ln-cards--horizontal .ln-facts li{font-size:13px}#ln-portal .ln-cards--horizontal .ln-facts li .ln-icon{width:17px;height:17px}#ln-portal .ln-facts{gap:5px}#ln-portal .ln-facts li{font-size:14px}#ln-portal .ln-facts li .ln-icon{width:19px;height:19px}}
+/* Busca sobre foto de imóvel. O painel mantém os mesmos dados da listagem. */
+#ln-portal .ln-hero{min-height:clamp(620px,82vh,880px);isolation:isolate;background:linear-gradient(125deg,#0a241a,#174d33);color:#fff}
+#ln-portal .ln-hero__image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0}
+#ln-portal .ln-hero::before{z-index:1;background:linear-gradient(180deg,rgba(4,17,13,.68),rgba(4,23,16,.56) 45%,rgba(4,19,14,.78))}
+#ln-portal .ln-hero__inner{z-index:2;text-align:center;width:min(1120px,calc(100% - 36px))}
+#ln-portal .ln-hero__copy{margin:auto}
+#ln-portal .ln-hero__panel{width:min(860px,100%);margin:28px auto 0;text-align:left}
+#ln-portal .ln-tabs{justify-content:center;margin:0 0 14px}
+#ln-portal .ln-tabs button{min-width:100px;min-height:46px;padding:9px 18px;background:rgba(8,32,22,.78);border-color:rgba(255,255,255,.55);font-size:15px}
+#ln-portal .ln-hero__search{width:100%;max-width:none;display:grid;grid-template-columns:1fr;gap:14px;padding:20px;border-radius:18px;background:#fff;color:#24352e;text-align:left}
+#ln-portal .ln-hero__primary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#ln-portal .ln-hero__search .ln-field{margin:0;padding:0;border:0;color:#24352e;font-size:13px;letter-spacing:0;text-transform:none}
+#ln-portal .ln-hero__search .ln-field span{font-size:13px;letter-spacing:0;color:#34483c}
+#ln-portal .ln-hero__search input,#ln-portal .ln-hero__search select{width:100%;height:46px;min-height:46px!important;padding:8px 12px!important;border:1px solid #cbdad0!important;border-radius:9px!important;background:#fff!important;color:#24352e!important;font-size:15px!important}
+#ln-portal .ln-hero__more{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:44px;border:1px solid #cbdad0;border-radius:9px;background:#f4f8f5;color:#155e3b;font-size:15px;font-weight:750;cursor:pointer}
+#ln-portal .ln-hero__more .ln-icon{width:20px;height:20px}
+#ln-portal .ln-hero__more .ln-icon:last-child{margin-left:auto;margin-right:12px;width:17px;height:17px}
+#ln-portal .ln-hero__extras[hidden]{display:none!important}
+#ln-portal .ln-hero__extras{display:block}
+#ln-portal .ln-hero__extra-head{display:none}
+#ln-portal .ln-hero__extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;padding:14px;border:1px solid #dce8df;border-radius:12px;background:#f7faf8}
+#ln-portal .ln-hero__done{display:none}
+#ln-portal .ln-hero__submit{width:100%;min-height:52px;margin:0;font-size:17px}
+#ln-portal .ln-hero__submit .ln-icon{width:21px;height:21px}
+@media(max-width:600px){
+  #ln-portal .ln-hero{min-height:100svh}
+  #ln-portal .ln-hero__inner{width:calc(100% - 26px);padding:42px 0}
+  #ln-portal .ln-hero h1{font-size:clamp(31px,9vw,43px)}
+  #ln-portal .ln-hero p{font-size:16px}
+  #ln-portal .ln-hero__panel{margin-top:26px}
+  #ln-portal .ln-tabs{gap:5px}
+  #ln-portal .ln-tabs button{flex:1;min-width:0;padding:8px 4px;font-size:14px}
+  #ln-portal .ln-hero__search{grid-template-columns:52px minmax(0,1fr);gap:12px;padding:16px}
+  #ln-portal .ln-hero__primary{grid-column:1/-1;grid-template-columns:1fr;gap:12px}
+  #ln-portal .ln-hero__more{grid-column:1;grid-row:2;min-height:52px;padding:0;border-color:#cbdad0}
+  #ln-portal .ln-hero__submit{grid-column:2;grid-row:2;min-width:0;font-size:15px}
+  #ln-portal .ln-hero__extras:not([hidden]){position:fixed;z-index:10001;top:8vh;left:12px;right:12px;width:auto;height:84vh;height:84dvh;overflow:auto;padding:18px;border-radius:18px;background:#fff;box-shadow:0 0 0 100vmax rgba(0,0,0,.72),0 24px 80px rgba(0,0,0,.35);color:#24352e}
+  #ln-portal .ln-hero__extra-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  #ln-portal .ln-hero__extra-head h2{margin:0;font-size:21px;color:#132a20}
+  #ln-portal .ln-hero__extra-head button{display:grid;place-items:center;width:44px;height:44px;border:1px solid #cbdad0;border-radius:9px;background:#fff;color:#24352e}
+  #ln-portal .ln-hero__extra-grid{grid-template-columns:1fr;padding:0;border:0;background:#fff}
+  #ln-portal .ln-hero__done{display:flex;grid-column:1;min-height:48px;margin-top:8px}
+  html.ln-filters-open{overflow:hidden}
+}
+/* Filtro superior único e quatro cards por linha nas telas largas. */
+#ln-portal .ln-layout--full{display:block}
+#ln-portal .ln-cards--vertical,#ln-portal .ln-cards--favorites{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+#ln-portal .ln-results .ln-toolbar{scroll-margin-top:16px}
+#ln-portal .ln-hero__primary{grid-template-columns:repeat(3,minmax(0,1fr))}
+#ln-portal .ln-hero__search{grid-template-columns:56px minmax(0,1fr)}
+#ln-portal .ln-hero__primary,#ln-portal .ln-hero__extras{grid-column:1/-1}
+#ln-portal .ln-hero__more{grid-column:1;grid-row:3;min-height:52px;padding:0}
+#ln-portal .ln-hero__more .ln-icon{width:22px;height:22px;margin:0}
+#ln-portal .ln-hero__submit{grid-column:2;grid-row:3}
+#ln-portal .ln-hero__extras:not([hidden]){grid-row:2}
+#ln-portal .ln-hero__extra-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#ln-portal .ln-hero__extra-grid .ln-field-group{margin:0}
+#ln-portal .ln-hero__extra-grid .ln-field-group__title{font-size:13px;letter-spacing:0;text-transform:none}
+#ln-portal .ln-hero--compact{min-height:0}
+#ln-portal .ln-hero--compact .ln-hero__inner{padding:28px 0}
+#ln-portal .ln-hero--compact .ln-hero__panel{margin:0 auto}
+#ln-portal .ln-cards--vertical .ln-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#ln-portal .ln-cards--vertical .ln-card__body{padding:15px}
+#ln-portal .ln-cards--vertical .ln-card h3{font-size:18px}
+@media(max-width:1150px){#ln-portal .ln-cards--vertical,#ln-portal .ln-cards--favorites{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:850px){#ln-portal .ln-cards--vertical,#ln-portal .ln-cards--favorites{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+  #ln-portal .ln-hero__primary{grid-column:1/-1;grid-template-columns:1fr}
+  #ln-portal .ln-hero__more{grid-column:1;grid-row:3}
+  #ln-portal .ln-hero__submit{grid-column:2;grid-row:3}
+  #ln-portal .ln-hero__extras:not([hidden]){grid-row:auto}
+  #ln-portal .ln-hero__extra-grid{grid-template-columns:1fr}
+  #ln-portal .ln-hero--compact{min-height:0}
+  #ln-portal .ln-cards--vertical,#ln-portal .ln-cards--favorites{grid-template-columns:1fr}
+  #ln-portal .ln-cards--vertical .ln-facts{display:flex;flex-wrap:wrap;justify-content:space-between}
+  #ln-portal .ln-cards--vertical .ln-card h3{font-size:19px}
+  html.ln-filters-open #ln-portal .ln-hero{z-index:10000;overflow:visible}
+}
+
+#ln-portal .ln-hero__more .ln-icon:last-child{display:inline-block;width:22px;height:22px;margin:0}
+/* Ordenação como quinto controle no celular. */
+#ln-portal .ln-toolbar{position:relative}
+#ln-portal .ln-sort-toggle{display:none}
+#ln-portal .ln-sort-menu[hidden]{display:none!important}
+#ln-portal .ln-sort-menu{position:absolute;z-index:20;top:calc(100% - 10px);right:16px;display:grid;width:min(280px,calc(100% - 32px));padding:8px;border:1px solid var(--ln-border);border-radius:12px;background:var(--ln-surface);box-shadow:var(--ln-shadow-hover)}
+#ln-portal .ln-sort-menu button{min-height:44px;padding:9px 12px;border:0;border-radius:7px;background:transparent;color:var(--ln-heading);text-align:left;cursor:pointer}
+#ln-portal .ln-sort-menu button:hover,#ln-portal .ln-sort-menu button[aria-pressed=true]{background:var(--ln-soft);color:var(--ln-green)}
+@media(max-width:600px){
+  #ln-portal .ln-toolbar__controls>label{display:none}
+  #ln-portal .ln-views{grid-template-columns:repeat(5,minmax(0,1fr));width:100%;gap:4px}
+  #ln-portal .ln-sort-toggle{display:flex}
+  #ln-portal .ln-view{min-width:0;min-height:48px;padding:5px 1px;font-size:10px}
+  #ln-portal .ln-view .ln-icon{width:19px;height:19px}
+}

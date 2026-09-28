@@ -205,6 +205,16 @@
     "subtipo": {
       "type": "string",
       "maxLength": 80
+    },
+    "regiao": {
+      "enum": [
+        "Central",
+        "Norte",
+        "Sul",
+        "Leste",
+        "Oeste",
+        "Rural"
+      ]
     }
   },
   "additionalProperties": false
