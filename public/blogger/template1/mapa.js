@@ -13,13 +13,31 @@
       css.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
       css.integrity = "sha256-p4NxAoJBhIINfQ3ynh3WrzNfMZrKQ+LSfFmxMZRoZDE=";
       css.crossOrigin = "";
+      css.onerror = () => {
+        css.remove();
+        const fallbackCss = document.createElement("link");
+        fallbackCss.rel = "stylesheet";
+        fallbackCss.href = "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css";
+        fallbackCss.integrity = css.integrity;
+        fallbackCss.crossOrigin = "";
+        document.head.appendChild(fallbackCss);
+      };
       document.head.appendChild(css);
       const script = document.createElement("script");
       script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
       script.integrity = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
       script.crossOrigin = "";
       script.onload = () => window.L && typeof window.L.map === "function" ? resolve(window.L) : reject(new Error("Biblioteca do mapa indisponível."));
-      script.onerror = () => reject(new Error("Não foi possível carregar o mapa."));
+      script.onerror = () => {
+        script.remove();
+        const fallback = document.createElement("script");
+        fallback.src = "https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js";
+        fallback.integrity = script.integrity;
+        fallback.crossOrigin = "";
+        fallback.onload = () => window.L && typeof window.L.map === "function" ? resolve(window.L) : reject(new Error("Biblioteca do mapa indisponível."));
+        fallback.onerror = () => reject(new Error("Não foi possível carregar o mapa."));
+        document.head.appendChild(fallback);
+      };
       document.head.appendChild(script);
     });
     return loader.catch(error => { loader = null; throw error; });

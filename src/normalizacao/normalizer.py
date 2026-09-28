@@ -9,6 +9,13 @@ from src.core.io import CLIENT_ID
 
 
 KINDS = {"casa", "apartamento", "terreno", "comercial", "rural", "galpao", "outro"}
+VR_TYPES = {
+    "apartment": "apartamento", "penthouse": "apartamento", "flat": "apartamento", "kitnet": "apartamento", "loft": "apartamento", "studio": "apartamento",
+    "home": "casa", "condo": "casa", "village house": "casa", "sobrado": "casa",
+    "land lot": "terreno", "farm ranch": "rural", "agricultural": "rural",
+    "industrial": "galpao", "building": "comercial", "edificio residencial": "comercial", "edificio comercial": "comercial",
+    "consultorio": "comercial", "loja": "comercial", "business": "comercial", "corporate floor": "comercial", "office": "comercial",
+}
 PURPOSES = {"venda", "aluguel"}
 MEDIA_TYPES = {"image", "video"}
 MAX_AREA_M2 = Decimal("1000000000")
@@ -168,7 +175,11 @@ def normalize(raw: dict, client_id: str) -> dict:
     purpose = text(_first(raw, "finalidade", "TransactionType"), 20).lower()
     if not external or not city or purpose not in PURPOSES:
         raise ValueError("Campos obrigatórios inválidos")
-    kind = text(_first(raw, "tipo", "PropertyType"), 30).lower()
+    property_type = text(_first(raw, "tipo", "PropertyType", default=_first(_mapping(raw.get("Details")), "PropertyType")), 80)
+    kind = property_type.lower()
+    if '/' in kind:
+        usage, subtype = (part.strip() for part in kind.split('/', 1))
+        kind = "terreno" if subtype == "land lot" else VR_TYPES.get(subtype, "comercial" if usage == "commercial" else "outro")
     if kind not in KINDS:
         kind = "outro"
     external_slug = slug(external)
@@ -189,7 +200,7 @@ def normalize(raw: dict, client_id: str) -> dict:
         "id": f"{client_id}-{external_slug}",
         "cliente_id": client_id,
         "codigo": external,
-        "titulo": text(_first(raw, "titulo", "Title"), 160),
+        "titulo": text(_first(raw, "titulo", "Title", default=property_type), 160),
         "descricao": text(_first(raw, "descricao", "Description"), 5000),
         "cidade": city,
         "bairro": text(_first(raw, "bairro", "Neighborhood"), 100),
@@ -209,7 +220,7 @@ def normalize(raw: dict, client_id: str) -> dict:
         "andar": int(number(_first(raw, "UnitFloor", default=_first(details, "UnitFloor", default=0)), 0, MAX_COUNT)),
         "andares": int(number(_first(raw, "Floors", default=_first(details, "Floors", default=0)), 0, MAX_COUNT)),
         "ano_construcao": int(number(_first(raw, "YearBuilt", default=_first(details, "YearBuilt", default=0)), 0, 3000)),
-        "subtipo": text(_first(details, "PropertyType", "property_type", default=""), 80),
+        "subtipo": text(_first(details, "PropertyType", "property_type", default=property_type if "/" in property_type else ""), 80),
         "fotos": photos,
         "location": location,
         "media": media,

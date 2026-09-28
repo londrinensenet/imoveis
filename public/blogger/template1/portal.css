@@ -357,3 +357,6 @@ html.ln-compare-open{overflow:hidden}
   #ln-portal .ln-cards--horizontal .ln-card__actions .ln-icon-btn{width:32px;height:32px}
   #ln-portal .ln-compare-drawer{width:min(390px,94vw);padding:18px}
 }
+#ln-portal .ln-hero:not(.ln-hero--compact) .ln-hero__copy{max-width:none}
+#ln-portal .ln-hero:not(.ln-hero--compact) h1{max-width:none;font-size:clamp(20px,5vw,42px);white-space:nowrap}
+#ln-portal .ln-hero:not(.ln-hero--compact) .ln-hero__copy p{font-size:clamp(11px,2.7vw,16px);white-space:nowrap}

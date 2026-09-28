@@ -5,8 +5,8 @@
   function options(records, field) { return [...new Set(records.map(item => item[field]).filter(Boolean))].sort((a, b) => String(a).localeCompare(String(b), "pt-BR")); }
   function filtrar(records, state) {
     return records.filter(item => {
-      for (const field of ["finalidade", "tipo", "regiao", "cidade", "bairro"]) if (state[field] && C.normalize(item[field]) !== C.normalize(state[field])) return false;
-      for (const field of ["quartos", "banheiros", "vagas"]) if (state[field] && value(item[field]) < value(state[field])) return false;
+      for (const field of ["finalidade", "tipo", "subtipo", "regiao", "cidade", "bairro"]) if (state[field] && C.normalize(item[field]) !== C.normalize(state[field])) return false;
+      for (const field of ["quartos", "suites", "banheiros", "vagas"]) if (state[field] && value(item[field]) < value(state[field])) return false;
       if (state.preco_min && value(item.preco) < value(state.preco_min)) return false;
       if (state.preco_max && value(item.preco) > value(state.preco_max)) return false;
       if (state.area_min && value(item.area) < value(state.area_min)) return false;

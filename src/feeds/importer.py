@@ -39,6 +39,45 @@ def parse(data: bytes) -> list[dict]:
     try: root = ET.fromstring(data)
     except ET.ParseError as exc: raise ValueError("XML inválido") from exc
     items = root.findall(".//imovel")
+    if not items:
+        def tag(element): return element.tag.rsplit('}', 1)[-1]
+        def child(element, name): return next((entry for entry in element if tag(entry) == name), None) if element is not None else None
+        def value(element, name):
+            node = child(element, name)
+            return (node.text or '').strip() if node is not None else ''
+        listings = [element for element in root.iter() if tag(element) == 'Listing']
+        if len(listings) > MAX_ITEMS: raise ValueError("Feed excede o limite de imóveis")
+        if listings:
+            parsed = []
+            for listing in listings:
+                details, location, media = (child(listing, name) for name in ('Details', 'Location', 'Media'))
+                transaction = value(listing, 'TransactionType').lower()
+                base = {
+                    'ListingID': value(listing, 'ListingID'),
+                    'Title': value(listing, 'Title') or value(details, 'Title'),
+                    'Description': value(details, 'Description'),
+                    'City': value(location, 'City'),
+                    'Neighborhood': value(location, 'Neighborhood'),
+                    'State': (child(location, 'State').attrib.get('abbreviation') or value(location, 'State')) if child(location, 'State') is not None else '',
+                    'PropertyType': value(details, 'PropertyType'),
+                    'ListPrice': value(details, 'ListPrice'),
+                    'RentalPrice': value(details, 'RentalPrice'),
+                    'Bedrooms': value(details, 'Bedrooms'),
+                    'Bathrooms': value(details, 'Bathrooms'),
+                    'Garage': value(details, 'Garage'),
+                    'Suites': value(details, 'Suites'),
+                    'TransactionType': transaction,
+                    'Location': {name:value(location,name) for name in ('Zone','Latitude','Longitude')},
+                    'Details': {name:value(details,name) for name in ('PropertyType','LivingArea','LotArea','LotAreaUnit','UnitFloor','Floors','YearBuilt')},
+                    'Media': [{'Type':value(item,'Type'),'URL':value(item,'URL')} for item in (list(media) if media is not None else []) if tag(item) in ('Item','MediaItem')],
+                }
+                purposes = ('venda','aluguel') if transaction in ('sale/rent','for sale/for rent') else ('venda',) if transaction in ('for sale','sale') else ('aluguel',) if transaction in ('for rent','rent') else ()
+                for purpose in purposes:
+                    record = base | {'finalidade':purpose}
+                    if len(purposes) > 1: record['ListingID'] += '-' + purpose
+                    parsed.append(record)
+            if not parsed: raise ValueError("Feed sem imóveis válidos")
+            return parsed
     if not items: raise ValueError("Feed sem imóveis")
     if len(items) > MAX_ITEMS: raise ValueError("Feed excede o limite de imóveis")
     return [{child.tag: (child.text or "").strip() for child in node if len(child) == 0} | {"fotos": [(f.text or "").strip() for f in node.findall("./fotos/foto")]} for node in items]
